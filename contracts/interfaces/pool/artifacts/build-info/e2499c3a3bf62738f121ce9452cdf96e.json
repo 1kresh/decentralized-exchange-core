@@ -1,0 +1,714 @@
+{
+	"id": "e2499c3a3bf62738f121ce9452cdf96e",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.7",
+	"solcLongVersion": "0.8.7+commit.e28d00a7",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"contracts/interfaces/pool/ISimswapPoolActions.sol": {
+				"content": "// SPDX-License-Identifier: Unlicensed\r\npragma solidity ^0.8.0;\r\n\r\n/// @title Permissionless pool actions\r\n/// @notice Contains pool methods that can be called by anyone\r\ninterface IUniswapV3PoolActions {\r\n    /// @notice Adds liquidity for the given recipient/tickLower/tickUpper position\r\n    /// @dev The caller of this method receives a callback in the form of IUniswapV3MintCallback#uniswapV3MintCallback\r\n    /// @param recipient The address for which the liquidity will be created\r\n    /// @return liquidity The amount of token0 that was paid to mint the given amount of liquidity. Matches the value in the callback\r\n    function mint(\r\n        address recipient\r\n    ) external returns (uint256 liquidity);\r\n\r\n    /// @notice Burn liquidity from the sender and account tokens owed for the liquidity to the position\r\n    /// @dev Burn liquidity\r\n    /// @param recipient The address that recieved tokens\r\n    /// @return amount0 The amount of token0 sent to the recipient\r\n    /// @return amount1 The amount of token1 sent to the recipient\r\n    function burn(\r\n        address recipient\r\n    ) external returns (uint256 amount0, uint256 amount1);\r\n\r\n    /// @notice Swap token0 for token1, or token1 for token0\r\n    /// @dev Swap tokens\r\n    /// @param amount0Out The amount of token0 output\r\n    /// @param amount1Out The amount of token1 output\r\n    /// @param recipient The address to receive the output of the swap\r\n    /// @param data Any data to be passed through to the callback\r\n    function swap(\r\n        uint256 amount0Out,\r\n        uint256 amount1Out,\r\n        address recipient,\r\n        bytes calldata data\r\n    ) external;\r\n\r\n    function skim(\r\n        address recipient\r\n    ) external;\r\n\r\n    function sync(\r\n    ) external;\r\n\r\n}"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			}
+		}
+	},
+	"output": {
+		"contracts": {
+			"contracts/interfaces/pool/ISimswapPoolActions.sol": {
+				"IUniswapV3PoolActions": {
+					"abi": [
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "recipient",
+									"type": "address"
+								}
+							],
+							"name": "burn",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "amount0",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount1",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "recipient",
+									"type": "address"
+								}
+							],
+							"name": "mint",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "liquidity",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "address",
+									"name": "recipient",
+									"type": "address"
+								}
+							],
+							"name": "skim",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "amount0Out",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount1Out",
+									"type": "uint256"
+								},
+								{
+									"internalType": "address",
+									"name": "recipient",
+									"type": "address"
+								},
+								{
+									"internalType": "bytes",
+									"name": "data",
+									"type": "bytes"
+								}
+							],
+							"name": "swap",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [],
+							"name": "sync",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {
+							"burn(address)": {
+								"details": "Burn liquidity",
+								"params": {
+									"recipient": "The address that recieved tokens"
+								},
+								"returns": {
+									"amount0": "The amount of token0 sent to the recipient",
+									"amount1": "The amount of token1 sent to the recipient"
+								}
+							},
+							"mint(address)": {
+								"details": "The caller of this method receives a callback in the form of IUniswapV3MintCallback#uniswapV3MintCallback",
+								"params": {
+									"recipient": "The address for which the liquidity will be created"
+								},
+								"returns": {
+									"liquidity": "The amount of token0 that was paid to mint the given amount of liquidity. Matches the value in the callback"
+								}
+							},
+							"swap(uint256,uint256,address,bytes)": {
+								"details": "Swap tokens",
+								"params": {
+									"amount0Out": "The amount of token0 output",
+									"amount1Out": "The amount of token1 output",
+									"data": "Any data to be passed through to the callback",
+									"recipient": "The address to receive the output of the swap"
+								}
+							}
+						},
+						"title": "Permissionless pool actions",
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"burn(address)": "89afcb44",
+							"mint(address)": "6a627842",
+							"skim(address)": "bc25cf77",
+							"swap(uint256,uint256,address,bytes)": "022c0d9f",
+							"sync()": "fff6cae9"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.7+commit.e28d00a7\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"burn\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amount0\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount1\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"mint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"liquidity\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"skim\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount0Out\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount1Out\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"swap\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sync\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"burn(address)\":{\"details\":\"Burn liquidity\",\"params\":{\"recipient\":\"The address that recieved tokens\"},\"returns\":{\"amount0\":\"The amount of token0 sent to the recipient\",\"amount1\":\"The amount of token1 sent to the recipient\"}},\"mint(address)\":{\"details\":\"The caller of this method receives a callback in the form of IUniswapV3MintCallback#uniswapV3MintCallback\",\"params\":{\"recipient\":\"The address for which the liquidity will be created\"},\"returns\":{\"liquidity\":\"The amount of token0 that was paid to mint the given amount of liquidity. Matches the value in the callback\"}},\"swap(uint256,uint256,address,bytes)\":{\"details\":\"Swap tokens\",\"params\":{\"amount0Out\":\"The amount of token0 output\",\"amount1Out\":\"The amount of token1 output\",\"data\":\"Any data to be passed through to the callback\",\"recipient\":\"The address to receive the output of the swap\"}}},\"title\":\"Permissionless pool actions\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"burn(address)\":{\"notice\":\"Burn liquidity from the sender and account tokens owed for the liquidity to the position\"},\"mint(address)\":{\"notice\":\"Adds liquidity for the given recipient/tickLower/tickUpper position\"},\"swap(uint256,uint256,address,bytes)\":{\"notice\":\"Swap token0 for token1, or token1 for token0\"}},\"notice\":\"Contains pool methods that can be called by anyone\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/pool/ISimswapPoolActions.sol\":\"IUniswapV3PoolActions\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/interfaces/pool/ISimswapPoolActions.sol\":{\"keccak256\":\"0x5ee040e38b704fb12b5ab045eff1f8df69b084c2d6338d2b3abf10fcf3018bb1\",\"license\":\"Unlicensed\",\"urls\":[\"bzz-raw://0ebe5993746064b3bd47eb4a21b2c4ec82dcf7f360db6e5529da3da10112bc86\",\"dweb:/ipfs/QmW7uKkXtPHCPZXf95Sse5AtmDWsTUWSPQJRn6L2wetRJE\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {
+							"burn(address)": {
+								"notice": "Burn liquidity from the sender and account tokens owed for the liquidity to the position"
+							},
+							"mint(address)": {
+								"notice": "Adds liquidity for the given recipient/tickLower/tickUpper position"
+							},
+							"swap(uint256,uint256,address,bytes)": {
+								"notice": "Swap token0 for token1, or token1 for token0"
+							}
+						},
+						"notice": "Contains pool methods that can be called by anyone",
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"contracts/interfaces/pool/ISimswapPoolActions.sol": {
+				"ast": {
+					"absolutePath": "contracts/interfaces/pool/ISimswapPoolActions.sol",
+					"exportedSymbols": {
+						"IUniswapV3PoolActions": [
+							41
+						]
+					},
+					"id": 42,
+					"license": "Unlicensed",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".0"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "40:23:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"documentation": {
+								"id": 2,
+								"nodeType": "StructuredDocumentation",
+								"src": "67:104:0",
+								"text": "@title Permissionless pool actions\n @notice Contains pool methods that can be called by anyone"
+							},
+							"fullyImplemented": false,
+							"id": 41,
+							"linearizedBaseContracts": [
+								41
+							],
+							"name": "IUniswapV3PoolActions",
+							"nameLocation": "181:21:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"documentation": {
+										"id": 3,
+										"nodeType": "StructuredDocumentation",
+										"src": "210:412:0",
+										"text": "@notice Adds liquidity for the given recipient/tickLower/tickUpper position\n @dev The caller of this method receives a callback in the form of IUniswapV3MintCallback#uniswapV3MintCallback\n @param recipient The address for which the liquidity will be created\n @return liquidity The amount of token0 that was paid to mint the given amount of liquidity. Matches the value in the callback"
+									},
+									"functionSelector": "6a627842",
+									"id": 10,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "mint",
+									"nameLocation": "637:4:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 6,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 5,
+												"mutability": "mutable",
+												"name": "recipient",
+												"nameLocation": "660:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 10,
+												"src": "652:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 4,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "652:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "641:35:0"
+									},
+									"returnParameters": {
+										"id": 9,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 8,
+												"mutability": "mutable",
+												"name": "liquidity",
+												"nameLocation": "703:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 10,
+												"src": "695:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 7,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "695:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "694:19:0"
+									},
+									"scope": 41,
+									"src": "628:86:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 11,
+										"nodeType": "StructuredDocumentation",
+										"src": "722:324:0",
+										"text": "@notice Burn liquidity from the sender and account tokens owed for the liquidity to the position\n @dev Burn liquidity\n @param recipient The address that recieved tokens\n @return amount0 The amount of token0 sent to the recipient\n @return amount1 The amount of token1 sent to the recipient"
+									},
+									"functionSelector": "89afcb44",
+									"id": 20,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "burn",
+									"nameLocation": "1061:4:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 14,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 13,
+												"mutability": "mutable",
+												"name": "recipient",
+												"nameLocation": "1084:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 20,
+												"src": "1076:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 12,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "1076:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1065:35:0"
+									},
+									"returnParameters": {
+										"id": 19,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 16,
+												"mutability": "mutable",
+												"name": "amount0",
+												"nameLocation": "1127:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 20,
+												"src": "1119:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 15,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1119:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 18,
+												"mutability": "mutable",
+												"name": "amount1",
+												"nameLocation": "1144:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 20,
+												"src": "1136:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 17,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1136:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1118:34:0"
+									},
+									"scope": 41,
+									"src": "1052:101:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 21,
+										"nodeType": "StructuredDocumentation",
+										"src": "1161:331:0",
+										"text": "@notice Swap token0 for token1, or token1 for token0\n @dev Swap tokens\n @param amount0Out The amount of token0 output\n @param amount1Out The amount of token1 output\n @param recipient The address to receive the output of the swap\n @param data Any data to be passed through to the callback"
+									},
+									"functionSelector": "022c0d9f",
+									"id": 32,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "swap",
+									"nameLocation": "1507:4:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 30,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 23,
+												"mutability": "mutable",
+												"name": "amount0Out",
+												"nameLocation": "1530:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 32,
+												"src": "1522:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 22,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1522:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 25,
+												"mutability": "mutable",
+												"name": "amount1Out",
+												"nameLocation": "1559:10:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 32,
+												"src": "1551:18:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 24,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1551:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 27,
+												"mutability": "mutable",
+												"name": "recipient",
+												"nameLocation": "1588:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 32,
+												"src": "1580:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 26,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "1580:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 29,
+												"mutability": "mutable",
+												"name": "data",
+												"nameLocation": "1623:4:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 32,
+												"src": "1608:19:0",
+												"stateVariable": false,
+												"storageLocation": "calldata",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_calldata_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 28,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "1608:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1511:123:0"
+									},
+									"returnParameters": {
+										"id": 31,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1643:0:0"
+									},
+									"scope": 41,
+									"src": "1498:146:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "bc25cf77",
+									"id": 37,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "skim",
+									"nameLocation": "1661:4:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 35,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 34,
+												"mutability": "mutable",
+												"name": "recipient",
+												"nameLocation": "1684:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 37,
+												"src": "1676:17:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 33,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "1676:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1665:35:0"
+									},
+									"returnParameters": {
+										"id": 36,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1709:0:0"
+									},
+									"scope": 41,
+									"src": "1652:58:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "fff6cae9",
+									"id": 40,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "sync",
+									"nameLocation": "1727:4:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 38,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1731:8:0"
+									},
+									"returnParameters": {
+										"id": 39,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1748:0:0"
+									},
+									"scope": 41,
+									"src": "1718:31:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 42,
+							"src": "171:1583:0",
+							"usedErrors": []
+						}
+					],
+					"src": "40:1714:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

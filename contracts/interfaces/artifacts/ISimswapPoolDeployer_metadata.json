@@ -1,0 +1,80 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "parameters",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "factory",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "token0",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "token1",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "This is used to avoid having constructor arguments in the pool contract, which results in the init code hash of the pool being constant allowing the CREATE2 address of the pool to be cheaply computed on-chain",
+			"kind": "dev",
+			"methods": {
+				"parameters()": {
+					"details": "Called by the pool constructor to fetch the parameters of the pool Returns factory The factory address Returns token0 The first token of the pool by address sort order Returns token1 The second token of the pool by address sort order"
+				}
+			},
+			"title": "An interface for a contract that is capable of deploying Simswap Pools",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"parameters()": {
+					"notice": "Get the parameters to be used in constructing the pool, set transiently during pool creation."
+				}
+			},
+			"notice": "A contract that constructs a pool must implement this to pass arguments to the pool",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/interfaces/ISimswapPoolDeployer.sol": "ISimswapPoolDeployer"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/interfaces/ISimswapPoolDeployer.sol": {
+			"keccak256": "0xb135f8acb55f09cc916ec5e65d03e7f3246fc6c3a93e1e9b5923c00ccb9dffc3",
+			"license": "Unlicensed",
+			"urls": [
+				"bzz-raw://7eb224793fd53ed339a986be628094116609db464a64f31ca9eee2644927c15d",
+				"dweb:/ipfs/Qmc69hUbmT5APa52vu7CgUzb6HdSKoKan1zzaLGGoguTNz"
+			]
+		}
+	},
+	"version": 1
+}

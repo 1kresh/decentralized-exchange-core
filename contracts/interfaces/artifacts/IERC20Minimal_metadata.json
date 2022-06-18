@@ -1,0 +1,304 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "Approval",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "Transfer",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					}
+				],
+				"name": "allowance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "approve",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "balanceOf",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transfer",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "recipient",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "transferFrom",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"events": {
+				"Approval(address,address,uint256)": {
+					"params": {
+						"owner": "The account that approved spending of its tokens",
+						"spender": "The account for which the spending allowance was modified",
+						"value": "The new allowance from the owner to the spender"
+					}
+				},
+				"Transfer(address,address,uint256)": {
+					"params": {
+						"from": "The account from which the tokens were sent, i.e. the balance decreased",
+						"to": "The account to which the tokens were sent, i.e. the balance increased",
+						"value": "The amount of tokens that were transferred"
+					}
+				}
+			},
+			"kind": "dev",
+			"methods": {
+				"allowance(address,address)": {
+					"params": {
+						"owner": "The account of the token owner",
+						"spender": "The account of the token spender"
+					},
+					"returns": {
+						"_0": "The current allowance granted by `owner` to `spender`"
+					}
+				},
+				"approve(address,uint256)": {
+					"params": {
+						"amount": "The amount of tokens allowed to be used by `spender`",
+						"spender": "The account which will be allowed to spend a given amount of the owners tokens"
+					},
+					"returns": {
+						"_0": "Returns true for a successful approval, false for unsuccessful"
+					}
+				},
+				"balanceOf(address)": {
+					"params": {
+						"account": "The account for which to look up the number of tokens it has, i.e. its balance"
+					},
+					"returns": {
+						"_0": "The number of tokens held by the account"
+					}
+				},
+				"transfer(address,uint256)": {
+					"params": {
+						"amount": "The number of tokens to send from the sender to the recipient",
+						"recipient": "The account that will receive the amount transferred"
+					},
+					"returns": {
+						"_0": "Returns true for a successful transfer, false for an unsuccessful transfer"
+					}
+				},
+				"transferFrom(address,address,uint256)": {
+					"params": {
+						"amount": "The amount of the transfer",
+						"recipient": "The recipient of the transfer",
+						"sender": "The account from which the transfer will be initiated"
+					},
+					"returns": {
+						"_0": "Returns true for a successful transfer, false for unsuccessful"
+					}
+				}
+			},
+			"title": "Minimal ERC20 interface for Simswap",
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"Approval(address,address,uint256)": {
+					"notice": "Event emitted when the approval amount for the spender of a given owner's tokens changes."
+				},
+				"Transfer(address,address,uint256)": {
+					"notice": "Event emitted when tokens are transferred from one address to another, either via `#transfer` or `#transferFrom`."
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"allowance(address,address)": {
+					"notice": "Returns the current allowance given to a spender by an owner"
+				},
+				"approve(address,uint256)": {
+					"notice": "Sets the allowance of a spender from the `msg.sender` to the value `amount`"
+				},
+				"balanceOf(address)": {
+					"notice": "Returns the balance of a token"
+				},
+				"transfer(address,uint256)": {
+					"notice": "Transfers the amount of token from the `msg.sender` to the recipient"
+				},
+				"transferFrom(address,address,uint256)": {
+					"notice": "Transfers `amount` tokens from `sender` to `recipient` up to the allowance given to the `msg.sender`"
+				}
+			},
+			"notice": "Contains a subset of the full ERC20 interface that is used in Simswap",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/interfaces/IERC20Minimal.sol": "IERC20Minimal"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/interfaces/IERC20Minimal.sol": {
+			"keccak256": "0xedc3080107feb0cc16b9c50f539f1b4a865cab35ace0fe035f340595b06344f0",
+			"license": "Unlicensed",
+			"urls": [
+				"bzz-raw://c28feeb62e207c5bc66930502888d5f78bdfba51a8063c4b91e7ece2b7b83bdf",
+				"dweb:/ipfs/QmYjYQSSKkFMVRaAx5wMbwcQWMBfk1VZ1Qb3Z2CPkmHVZt"
+			]
+		}
+	},
+	"version": 1
+}
