@@ -6,33 +6,39 @@ import './interfaces/ISimswapFactory.sol';
 import './SimswapPoolDeployer.sol';
 import './libraries/NoDelegateCall.sol';
 
-contract SimswapFactory is ISimswapFactory {
+contract SimswapFactory is ISimswapFactory, SimswapPoolDeployer, NoDelegateCall {
     address public feeTo;
     address public feeToSetter;
 
-    mapping(address => mapping(address => address)) public getPool;
-    address[] public allPools;
+    mapping(address => mapping(address => address)) private _pools;
+    address[] private _allPools;
 
-    event PoolCreated(address indexed token0, address indexed token1, address pool, uint256);
-
-    constructor(address _feeToSetter) public {
+    constructor(address _feeToSetter) {
         feeToSetter = _feeToSetter;
     }
 
-    function allPoolsLength() external view returns (uint256) {
-        return allPools.length;
+    function getPool(address tokenA, address tokenB) external override view returns (address) {
+        return _pools[tokenA][tokenB];
+    }
+
+    function allPools() external override view returns (address[] memory) {
+        return _allPools;
+    }
+
+    function allPoolsLength() external override view returns (uint256) {
+        return _allPools.length;
     }
 
     function createPool(address tokenA, address tokenB) external override noDelegateCall returns (address pool) {
         require(tokenA != tokenB);
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
         require(token0 != address(0));
-        require(getPool[token0][token1] == address(0));
+        require(_pools[token0][token1] == address(0));
         pool = deploy(address(this), token0, token1);
-        getPool[token0][token1] = pool;
+        _pools[token0][token1] = pool;
         // populate mapping in the reverse direction, deliberate choice to avoid the cost of comparing addresses
-        getPool[token1][token0] = pool;
-        emit PoolCreated(token0, token1, pool);
+        _pools[token1][token0] = pool;
+        emit PoolCreated(token0, token1, pool, _allPools.length);
     }
 
     function setFeeTo(address _feeTo) external {

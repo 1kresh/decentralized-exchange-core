@@ -47,6 +47,6 @@ interface ISimswapPoolEvents {
     /// @param reserve1 Amount of token1
     event Sync(
         uint112 reserve0,
-        uint112 reserve1,
+        uint112 reserve1
     );
 }

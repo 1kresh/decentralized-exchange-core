@@ -2,17 +2,20 @@
 pragma solidity ^0.8.0;
 
 import './interfaces/ISimswapERC20.sol';
+import './libraries/LowGasSafeMath.sol';
 
 contract SimswapERC20 is ISimswapERC20 {
-    string private constant _name = 'Simswap';
-    string private constant _symbol = 'simp';
-    uint8 private constant _decimals = 18;
+    using LowGasSafeMath for uint256;
+
+    string public constant override _name = 'Simswap';
+    string public constant override _symbol = 'simp';
+    uint8 public constant override _decimals = 18;
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
 
-    uint256 internal immutable INITIAL_CHAIN_ID;
-    bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
+    uint256 private immutable INITIAL_CHAIN_ID;
+    bytes32 private immutable INITIAL_DOMAIN_SEPARATOR;
 
     // keccak256("Permit(address owner,address spender,uint256 amount,uint256 nonce,uint256 deadline)");    
     bytes32 private constant PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
@@ -20,18 +23,6 @@ contract SimswapERC20 is ISimswapERC20 {
     bytes32 private constant DOMAIN_TYPEHASH = 0x8b73c3c69bb8fe3d512ecc4cf759cc79239f7b179b0ffacaa9a75d522b39400f;
 
     mapping(address => uint256) private _nonces;
-
-    function name() public pure override returns (string memory) {
-        return _name;
-    }
-
-    function symbol() public pure override returns (string memory) {
-        return _symbol;
-    }
-    
-    function decimals() public pure override returns (uint8) {
-        return _decimals;
-    }
 
     function totalSupply() public view override returns (uint256) {
         return _totalSupply;
@@ -67,10 +58,7 @@ contract SimswapERC20 is ISimswapERC20 {
         require(account != address(0), "SimswapERC20: burn from the zero address");
 
         uint256 accountBalance = _balances[account];
-        require(accountBalance >= amount, "SimswapERC20: burn amount exceeds balance");
-        unchecked {
-            _balances[account] = accountBalance - amount;
-        }
+        _balances[account] = accountBalance - amount;
         _totalSupply = _totalSupply - amount;
 
         emit Transfer(account, address(0), amount);
@@ -92,10 +80,7 @@ contract SimswapERC20 is ISimswapERC20 {
         require(from != address(0), "SimswapERC20: transfer from the zero address");
         require(to != address(0), "SimswapERC20: transfer to the zero address");
         uint256 fromBalance = _balances[from];
-        require(fromBalance >= amount, "SimswapERC20: transfer amount exceeds balance");
-        unchecked {
-            _balances[from] = fromBalance - amount;
-        }
+        _balances[from] = fromBalance - amount;
         _balances[to] = _balances[to] + amount;
         emit Transfer(from, to, amount);
     }
@@ -117,10 +102,7 @@ contract SimswapERC20 is ISimswapERC20 {
     ) internal {
         uint256 currentAllowance = allowance(owner, spender);
         if (currentAllowance != type(uint256).max) {
-            require(currentAllowance >= amount, "SimswapERC20: insufficient allowance");
-            unchecked {
-                _approve(owner, spender, currentAllowance - amount);
-            }
+            _approve(owner, spender, currentAllowance - amount);
         }
     }
 

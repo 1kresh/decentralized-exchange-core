@@ -5,7 +5,7 @@ import './interfaces/ISimswapPoolDeployer.sol';
 
 import './SimswapPool.sol';
 
-contract SimswapPoolDeployer is SimswapPoolDeployer {
+contract SimswapPoolDeployer is ISimswapPoolDeployer {
     struct Parameters {
         address factory;
         address token0;
