@@ -7,9 +7,9 @@ import './libraries/LowGasSafeMath.sol';
 contract SimswapERC20 is ISimswapERC20 {
     using LowGasSafeMath for uint256;
 
-    string public constant override _name = 'Simswap';
-    string public constant override _symbol = 'simp';
-    uint8 public constant override _decimals = 18;
+    string private constant override _name = 'Simswap';
+    string private constant override _symbol = 'SIMP';
+    uint8 private constant override _decimals = 18;
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -23,6 +23,18 @@ contract SimswapERC20 is ISimswapERC20 {
     bytes32 private constant DOMAIN_TYPEHASH = 0x8b73c3c69bb8fe3d512ecc4cf759cc79239f7b179b0ffacaa9a75d522b39400f;
 
     mapping(address => uint256) private _nonces;
+
+    function name() public view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() public view override returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() public view override returns (uint8) {
+        return _decimals;
+    }
 
     function totalSupply() public view override returns (uint256) {
         return _totalSupply;

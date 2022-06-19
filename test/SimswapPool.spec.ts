@@ -1,28 +1,28 @@
 import chai, { expect } from 'chai'
-import { Contract } from 'ethers'
+import { Contract, BigNumber, constants } from 'ethers'
 import { solidity, MockProvider, createFixtureLoader } from 'ethereum-waffle'
-import { BigNumber, bigNumberify } from 'ethers/utils'
 
 import { expandTo18Decimals, mineBlock, encodePrice } from './shared/utilities'
 import { poolFixture } from './shared/fixtures'
-import { AddressZero } from 'ethers/constants'
 
-const MINIMUM_LIQUIDITY = bigNumberify(10).pow(3)
+const MINIMUM_LIQUIDITY = BigNumber.from(10).pow(3)
 
 chai.use(solidity)
 
 const overrides = {
-  gasLimit: 9999999
+  gasLimit: 9999999,
 }
 
 describe('SimswapPool', () => {
   const provider = new MockProvider({
-    hardfork: 'istanbul',
-    mnemonic: 'horn horn horn horn horn horn horn horn horn horn horn horn',
-    gasLimit: 9999999
+    ganacheOptions: {
+      hardfork: 'london',
+      mnemonic: 'simple simple simple simple simple simple simple simple simple simple simple simple',
+      gasLimit: 9999999,
+    },
   })
   const [wallet, other] = provider.getWallets()
-  const loadFixture = createFixtureLoader(provider, [wallet])
+  const loadFixture = createFixtureLoader([wallet], provider)
 
   let factory: Contract
   let token0: Contract
@@ -45,9 +45,9 @@ describe('SimswapPool', () => {
     const expectedLiquidity = expandTo18Decimals(2)
     await expect(pool.mint(wallet.address, overrides))
       .to.emit(pool, 'Transfer')
-      .withArgs(AddressZero, AddressZero, MINIMUM_LIQUIDITY)
+      .withArgs(constants.AddressZero, constants.AddressZero, MINIMUM_LIQUIDITY)
       .to.emit(pool, 'Transfer')
-      .withArgs(AddressZero, wallet.address, expectedLiquidity.sub(MINIMUM_LIQUIDITY))
+      .withArgs(constants.AddressZero, wallet.address, expectedLiquidity.sub(MINIMUM_LIQUIDITY))
       .to.emit(pool, 'Sync')
       .withArgs(token0Amount, token1Amount)
       .to.emit(pool, 'Mint')
@@ -76,8 +76,8 @@ describe('SimswapPool', () => {
 
     [1, 10, 10, '906610893880149131'],
     [1, 100, 100, '987158034397061298'],
-    [1, 1000, 1000, '996006981039903216']
-  ].map(a => a.map(n => (typeof n === 'string' ? bigNumberify(n) : expandTo18Decimals(n))))
+    [1, 1000, 1000, '996006981039903216'],
+  ].map((a) => a.map((n) => (typeof n === 'string' ? BigNumber.from(n) : expandTo18Decimals(n))))
   swapTestCases.forEach((swapTestCase, i) => {
     it(`getInputPrice:${i}`, async () => {
       const [swapAmount, token0Amount, token1Amount, expectedOutputAmount] = swapTestCase
@@ -94,16 +94,14 @@ describe('SimswapPool', () => {
     ['997000000000000000', 5, 10, 1], // given amountIn, amountOut = floor(amountIn * .997)
     ['997000000000000000', 10, 5, 1],
     ['997000000000000000', 5, 5, 1],
-    [1, 5, 5, '1003009027081243732'] // given amountOut, amountIn = ceiling(amountOut / .997)
-  ].map(a => a.map(n => (typeof n === 'string' ? bigNumberify(n) : expandTo18Decimals(n))))
+    [1, 5, 5, '1003009027081243732'], // given amountOut, amountIn = ceiling(amountOut / .997)
+  ].map((a) => a.map((n) => (typeof n === 'string' ? BigNumber.from(n) : expandTo18Decimals(n))))
   optimisticTestCases.forEach((optimisticTestCase, i) => {
     it(`optimistic:${i}`, async () => {
       const [outputAmount, token0Amount, token1Amount, inputAmount] = optimisticTestCase
       await addLiquidity(token0Amount, token1Amount)
       await token0.transfer(pool.address, inputAmount)
-      await expect(pool.swap(outputAmount.add(1), 0, wallet.address, '0x', overrides)).to.be.revertedWith(
-        'Simswap: K'
-      )
+      await expect(pool.swap(outputAmount.add(1), 0, wallet.address, '0x', overrides)).to.be.revertedWith('Simswap: K')
       await pool.swap(outputAmount, 0, wallet.address, '0x', overrides)
     })
   })
@@ -114,7 +112,7 @@ describe('SimswapPool', () => {
     await addLiquidity(token0Amount, token1Amount)
 
     const swapAmount = expandTo18Decimals(1)
-    const expectedOutputAmount = bigNumberify('1662497915624478906')
+    const expectedOutputAmount = BigNumber.from('1662497915624478906')
     await token0.transfer(pool.address, swapAmount)
     await expect(pool.swap(0, expectedOutputAmount, wallet.address, '0x', overrides))
       .to.emit(token1, 'Transfer')
@@ -141,7 +139,7 @@ describe('SimswapPool', () => {
     await addLiquidity(token0Amount, token1Amount)
 
     const swapAmount = expandTo18Decimals(1)
-    const expectedOutputAmount = bigNumberify('453305446940074565')
+    const expectedOutputAmount = BigNumber.from('453305446940074565')
     await token1.transfer(pool.address, swapAmount)
     await expect(pool.swap(expectedOutputAmount, 0, wallet.address, '0x', overrides))
       .to.emit(token0, 'Transfer')
@@ -172,7 +170,7 @@ describe('SimswapPool', () => {
     await pool.sync(overrides)
 
     const swapAmount = expandTo18Decimals(1)
-    const expectedOutputAmount = bigNumberify('453305446940074565')
+    const expectedOutputAmount = BigNumber.from('453305446940074565')
     await token1.transfer(pool.address, swapAmount)
     await mineBlock(provider, (await provider.getBlock('latest')).timestamp + 1)
     const tx = await pool.swap(expectedOutputAmount, 0, wallet.address, '0x', overrides)
@@ -189,7 +187,7 @@ describe('SimswapPool', () => {
     await pool.transfer(pool.address, expectedLiquidity.sub(MINIMUM_LIQUIDITY))
     await expect(pool.burn(wallet.address, overrides))
       .to.emit(pool, 'Transfer')
-      .withArgs(pool.address, AddressZero, expectedLiquidity.sub(MINIMUM_LIQUIDITY))
+      .withArgs(pool.address, constants.AddressZero, expectedLiquidity.sub(MINIMUM_LIQUIDITY))
       .to.emit(token0, 'Transfer')
       .withArgs(pool.address, wallet.address, token0Amount.sub(1000))
       .to.emit(token1, 'Transfer')
@@ -248,7 +246,7 @@ describe('SimswapPool', () => {
     await addLiquidity(token0Amount, token1Amount)
 
     const swapAmount = expandTo18Decimals(1)
-    const expectedOutputAmount = bigNumberify('996006981039903216')
+    const expectedOutputAmount = BigNumber.from('996006981039903216')
     await token1.transfer(pool.address, swapAmount)
     await pool.swap(expectedOutputAmount, 0, wallet.address, '0x', overrides)
 
@@ -266,7 +264,7 @@ describe('SimswapPool', () => {
     await addLiquidity(token0Amount, token1Amount)
 
     const swapAmount = expandTo18Decimals(1)
-    const expectedOutputAmount = bigNumberify('996006981039903216')
+    const expectedOutputAmount = BigNumber.from('996006981039903216')
     await token1.transfer(pool.address, swapAmount)
     await pool.swap(expectedOutputAmount, 0, wallet.address, '0x', overrides)
 
@@ -278,7 +276,7 @@ describe('SimswapPool', () => {
 
     // using 1000 here instead of the symbolic MINIMUM_LIQUIDITY because the amounts only happen to be equal...
     // ...because the initial liquidity amounts were equal
-    expect(await token0.balanceOf(pool.address)).to.eq(bigNumberify(1000).add('249501683697445'))
-    expect(await token1.balanceOf(pool.address)).to.eq(bigNumberify(1000).add('250000187312969'))
+    expect(await token0.balanceOf(pool.address)).to.eq(BigNumber.from(1000).add('249501683697445'))
+    expect(await token1.balanceOf(pool.address)).to.eq(BigNumber.from(1000).add('250000187312969'))
   })
 })
