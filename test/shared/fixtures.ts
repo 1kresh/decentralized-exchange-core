@@ -16,7 +16,7 @@ const overrides = {
 }
 
 export async function factoryFixture([wallet]: Wallet[], _: providers.Web3Provider): Promise<FactoryFixture> {
-  const factory = await deployContract(wallet, SimswapFactory, [wallet.address], overrides)
+  const factory = await deployContract(wallet, SimswapFactory, [wallet.address, wallet.address], overrides)
   return { factory }
 }
 

@@ -12,10 +12,6 @@ chai.use(solidity)
 const TOTAL_SUPPLY = expandTo18Decimals(10000)
 const TEST_AMOUNT = expandTo18Decimals(10)
 
-function print(smth: any) {
-  console.debug(smth)
-}
-
 describe('SimswapERC20', () => {
   const provider = new MockProvider({
     ganacheOptions: {
@@ -32,10 +28,10 @@ describe('SimswapERC20', () => {
   })
 
   it('name, symbol, decimals, totalSupply, balanceOf, DOMAIN_SEPARATOR', async () => {
-    const _name = await token._name()
-    expect(_name).to.eq('Simswap')
-    expect(await token._symbol()).to.eq('SIMP')
-    expect(await token._decimals()).to.eq(18)
+    const name = await token.name()
+    expect(name).to.eq('Simswap')
+    expect(await token.symbol()).to.eq('SIMP')
+    expect(await token.decimals()).to.eq(18)
     expect(await token.totalSupply()).to.eq(TOTAL_SUPPLY)
     expect(await token.balanceOf(wallet.address)).to.eq(TOTAL_SUPPLY)
     expect(await token.DOMAIN_SEPARATOR()).to.eq(
@@ -46,7 +42,7 @@ describe('SimswapERC20', () => {
             utils.keccak256(
               utils.toUtf8Bytes('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)')
             ),
-            utils.keccak256(utils.toUtf8Bytes(_name)),
+            utils.keccak256(utils.toUtf8Bytes(name)),
             utils.keccak256(utils.toUtf8Bytes('1')),
             1337,
             token.address,
@@ -97,11 +93,8 @@ describe('SimswapERC20', () => {
   })
 
   it('permit', async () => {
-    print(1)
     const nonce = await token.nonces(wallet.address)
-    print(nonce)
     const deadline = constants.MaxUint256
-    print(deadline)
     const digest = await getApprovalDigest(
       token,
       { owner: wallet.address, spender: other.address, value: TEST_AMOUNT },
@@ -109,12 +102,10 @@ describe('SimswapERC20', () => {
       deadline
     )
 
-    print(digest)
     const { v, r, s } = ecsign(Buffer.from(digest.slice(2), 'hex'), Buffer.from(wallet.privateKey.slice(2), 'hex'))
-    print([v, r, s])
+
     await expect(
-      token.permit(wallet.address, other.address, TEST_AMOUNT, deadline, v, utils.hexlify(r), utils.hexlify(s)),
-      'permit'
+      token.permit(wallet.address, other.address, TEST_AMOUNT, deadline, v, utils.hexlify(r), utils.hexlify(s))
     )
       .to.emit(token, 'Approval')
       .withArgs(wallet.address, other.address, TEST_AMOUNT)

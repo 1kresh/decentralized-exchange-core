@@ -1,5 +1,5 @@
 import chai, { expect } from 'chai'
-import { Contract, BigNumber, constants } from 'ethers'
+import { Contract, BigNumber, constants, utils } from 'ethers'
 import { solidity, MockProvider, createFixtureLoader } from 'ethereum-waffle'
 
 import { getCreate2Address } from './shared/utilities'
@@ -32,7 +32,7 @@ describe('SimswapFactory', () => {
   })
 
   it('feeTo, feeToSetter, allPoolsLength', async () => {
-    expect(await factory.feeTo()).to.eq(constants.AddressZero)
+    expect(await factory.feeTo()).to.eq(wallet.address)
     expect(await factory.feeToSetter()).to.eq(wallet.address)
     expect(await factory.allPoolsLength()).to.eq(0)
   })
@@ -40,10 +40,10 @@ describe('SimswapFactory', () => {
   async function createPool(tokens: [string, string]) {
     const bytecode = `0x${SimswapPool.evm.bytecode.object}`
     const create2Address = getCreate2Address(factory.address, tokens, bytecode)
+
     await expect(factory.createPool(...tokens))
       .to.emit(factory, 'PoolCreated')
       .withArgs(TEST_ADDRESSES[0], TEST_ADDRESSES[1], create2Address, BigNumber.from(1))
-
     await expect(factory.createPool(...tokens)).to.be.reverted // Simswap: POOL_EXISTS
     await expect(factory.createPool(...tokens.slice().reverse())).to.be.reverted // Simswap: POOL_EXISTS
     expect(await factory.getPool(...tokens)).to.eq(create2Address)

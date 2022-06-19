@@ -7,9 +7,9 @@ import './libraries/LowGasSafeMath.sol';
 contract SimswapERC20 is ISimswapERC20 {
     using LowGasSafeMath for uint256;
 
-    string private constant override _name = 'Simswap';
-    string private constant override _symbol = 'SIMP';
-    uint8 private constant override _decimals = 18;
+    string private constant _name = 'Simswap';
+    string private constant _symbol = 'SIMP';
+    uint8 private constant _decimals = 18;
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -24,15 +24,15 @@ contract SimswapERC20 is ISimswapERC20 {
 
     mapping(address => uint256) private _nonces;
 
-    function name() public view override returns (string memory) {
+    function name() public pure override returns (string memory) {
         return _name;
     }
 
-    function symbol() public view override returns (string memory) {
+    function symbol() public pure override returns (string memory) {
         return _symbol;
     }
 
-    function decimals() public view override returns (uint8) {
+    function decimals() public pure override returns (uint8) {
         return _decimals;
     }
 
@@ -149,7 +149,7 @@ contract SimswapERC20 is ISimswapERC20 {
                 r,
                 s
             );
-            require(recoveredAddress != address(0) && recoveredAddress == owner, 'Simswap: INVALID_SIGNATURE');
+            require(recoveredAddress == owner, 'Simswap: INVALID_SIGNATURE');
             _approve(recoveredAddress, spender, amount);
         }
     }

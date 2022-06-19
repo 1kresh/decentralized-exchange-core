@@ -30,11 +30,14 @@ export function getCreate2Address(
   [tokenA, tokenB]: [string, string],
   bytecode: string
 ): string {
-  const [token0, token1] = tokenA < tokenB ? [tokenA, tokenB] : [tokenB, tokenA]
+  const [token0, token1] = tokenA.toLowerCase() < tokenB.toLowerCase() ? [tokenA, tokenB] : [tokenB, tokenA]
+  const constructorArgumentsEncoded = utils.defaultAbiCoder.encode(['address', 'address'], [token0, token1])
   const create2Inputs = [
     '0xff',
     factoryAddress,
-    utils.keccak256(utils.solidityPack(['address', 'address'], [token0, token1])),
+    // salt
+    utils.keccak256(constructorArgumentsEncoded),
+    // init code. bytecode + constructor arguments
     utils.keccak256(bytecode),
   ]
   const sanitizedInputs = `0x${create2Inputs.map((i) => i.slice(2)).join('')}`
@@ -51,7 +54,7 @@ export async function getApprovalDigest(
   nonce: BigNumber,
   deadline: BigNumber
 ): Promise<string> {
-  const name = await token._name()
+  const name = await token.name()
   const DOMAIN_SEPARATOR = getDomainSeparator(name, token.address)
   return utils.keccak256(
     utils.solidityPack(
