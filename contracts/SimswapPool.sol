@@ -186,10 +186,8 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         require(amount0Out > 0 || amount1Out > 0, 'Simswap: INSUFFICIENT_OUTPUT_AMOUNT');
 
         Slot0 memory _slot0 = slot0;
-        uint112 _reserve0 = _slot0.reserve0;
-        uint112 _reserve1 = _slot0.reserve1;
 
-        require(amount0Out < _reserve0 && amount1Out < _reserve1, 'Simswap: INSUFFICIENT_LIQUIDITY');
+        require(amount0Out < _slot0.reserve0 && amount1Out < _slot0.reserve1, 'Simswap: INSUFFICIENT_LIQUIDITY');
         
         uint256 _balance0;
         uint256 _balance1;
@@ -204,20 +202,16 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         _balance0 = balance0();
         _balance1 = balance1();
         }
-
-        uint256 res0 = _reserve0 - amount0Out;
-        uint256 res1 = _reserve1 - amount1Out;
-
-        uint256 amount0In = _balance0 > res0 ? _balance0 - res0 : 0;
-        uint256 amount1In = _balance1 > res1 ? _balance1 - res1 : 0;
+        uint256 amount0In = _balance0 > _slot0.reserve0 - amount0Out ? _balance0 - (_slot0.reserve0 - amount0Out) : 0;
+        uint256 amount1In = _balance1 > _slot0.reserve1 - amount1Out ? _balance1 - (_slot0.reserve1 - amount1Out) : 0;
         require(amount0In > 0 || amount1In > 0, 'Simswap: INSUFFICIENT_INPUT_AMOUNT');
         { // scope for reserve{0,1}Adjusted, avoids stack too deep errors
         uint256 balance0Adjusted = _balance0 * 1000 - amount0In * 3;
         uint256 balance1Adjusted = _balance1 * 1000 - amount1In * 3;
-        require(balance0Adjusted * balance1Adjusted >= uint256(_reserve0) * _reserve1 * 1000000, 'Simswap: K');
+        require(balance0Adjusted * balance1Adjusted >= uint256(_slot0.reserve0) * _slot0.reserve1 * 1000000, 'Simswap: K');
         }
 
-        _update(_balance0, _balance1, _reserve0, _reserve1);
+        _update(_balance0, _balance1, _slot0.reserve0, _slot0.reserve1);
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, recipient);
     }
 
