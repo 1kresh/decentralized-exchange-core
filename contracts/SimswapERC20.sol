@@ -91,8 +91,7 @@ contract SimswapERC20 is ISimswapERC20 {
     function _transfer(address from, address to, uint256 amount) internal {
         require(from != address(0), "SimswapERC20: transfer from the zero address");
         require(to != address(0), "SimswapERC20: transfer to the zero address");
-        uint256 fromBalance = _balances[from];
-        _balances[from] = fromBalance - amount;
+        _balances[from] = _balances[from] - amount;
         _balances[to] = _balances[to] + amount;
         emit Transfer(from, to, amount);
     }

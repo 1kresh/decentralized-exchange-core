@@ -5,12 +5,6 @@ pragma solidity ^0.8.0;
  * @dev Standard math utilities missing in the Solidity language.
  */
 library Math {
-    enum Rounding {
-        Down, // Toward negative infinity
-        Up, // Toward infinity
-        Zero // Toward zero
-    }
-
     /**
      * @dev Returns the smallest of two numbers.
      */
@@ -79,16 +73,5 @@ library Math {
             result = (result + a / result) >> 1;
             return min(result, a / result);
         }
-    }
-
-    /**
-     * @notice Calculates sqrt(a), following the selected rounding direction.
-     */
-    function sqrt(uint256 a, Rounding rounding) internal pure returns (uint256) {
-        uint256 result = sqrt(a);
-        if (rounding == Rounding.Up && result * result < a) {
-            result += 1;
-        }
-        return result;
     }
 }

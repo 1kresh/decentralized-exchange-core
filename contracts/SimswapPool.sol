@@ -89,10 +89,14 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
             price0CumulativeLast += LowGasSafeMath.mul(FixedPoint112.encode(_reserve1).uqdiv(_reserve0), timeElapsed);
             price1CumulativeLast += LowGasSafeMath.mul(FixedPoint112.encode(_reserve0).uqdiv(_reserve1), timeElapsed);
         }
-        slot0 = Slot0(uint112(_balance0), uint112(_balance1), blockTimestamp);
-        Slot0 memory _slot0 = slot0;
-        
-        emit Sync(_slot0.reserve0, _slot0.reserve1);
+        _reserve0 = uint112(_balance0);
+        _reserve1 = uint112(_balance1);
+
+        slot0.reserve0 = _reserve0;
+        slot0.reserve1 = _reserve1;
+        slot0.blockTimestampLast = blockTimestamp;
+
+        emit Sync(_reserve0, _reserve1);
     }
 
     /// @dev If fee is on, mint liquidity equivalent to 1/6th of the growth in sqrt(k)
@@ -120,23 +124,26 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     /// @dev This low-level function should be called from a contract which performs important safety checks
     function mint(address recipient) external override nonReentrant returns (uint256 liquidity) {
         Slot0 memory _slot0 = slot0;
+        uint112 _reserve0 = _slot0.reserve0;
+        uint112 _reserve1 = _slot0.reserve1;
+
         uint256 _balance0 = balance0();
         uint256 _balance1 = balance1();
-        uint256 amount0 = _balance0 - _slot0.reserve0;
-        uint256 amount1 = _balance1 - _slot0.reserve1;
+        uint256 amount0 = _balance0 - _reserve0;
+        uint256 amount1 = _balance1 - _reserve1;
 
-        bool feeOn = _mintFee(_slot0.reserve0, _slot0.reserve1);
+        bool feeOn = _mintFee(_reserve0, _reserve1);
         uint256 _totalSupply = totalSupply(); // gas savings, must be defined here since totalSupply can update in _mintFee
         if (_totalSupply == 0) {
             liquidity = Math.sqrt(amount0 * amount1) - MINIMUM_LIQUIDITY;
            _mint(address(0), MINIMUM_LIQUIDITY); // permanently lock the first MINIMUM_LIQUIDITY tokens
         } else {
-            liquidity = Math.min(amount0 * _totalSupply / _slot0.reserve0, amount1 * _totalSupply / _slot0.reserve1);
+            liquidity = Math.min(amount0 * _totalSupply / _reserve0, amount1 * _totalSupply / _reserve1);
         }
         require(liquidity > 0, 'Simswap: INSUFFICIENT_LIQUIDITY_MINTED');
         _mint(recipient, liquidity);
 
-        _update(_balance0, _balance1, _slot0.reserve0, _slot0.reserve1);
+        _update(_balance0, _balance1, _reserve0, _reserve1);
 
         _slot0 = slot0;
         if (feeOn) kLast = uint256(_slot0.reserve0) * _slot0.reserve1; // reserve0 and reserve1 are up-to-date
@@ -147,13 +154,16 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     /// @dev This low-level function should be called from a contract which performs important safety checks
     function burn(address recipient) external override nonReentrant returns (uint256 amount0, uint256 amount1) {
         Slot0 memory _slot0 = slot0;
+        uint112 _reserve0 = _slot0.reserve0;
+        uint112 _reserve1 = _slot0.reserve1;
+
         address _token0 = token0;                                // gas savings
         address _token1 = token1;                                // gas savings
         uint256 _balance0 = balance0();
         uint256 _balance1 = balance1();
         uint256 liquidity = balanceOf(address(this));
 
-        bool feeOn = _mintFee(_slot0.reserve0, _slot0.reserve1);
+        bool feeOn = _mintFee(_reserve0, _reserve1);
         uint256 _totalSupply = totalSupply(); // gas savings, must be defined here since totalSupply can update in _mintFee
         amount0 = liquidity * _balance0 / _totalSupply; // using balances ensures pro-rata distribution
         amount1 = liquidity * _balance1 / _totalSupply; // using balances ensures pro-rata distribution
@@ -164,7 +174,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         _balance0 = balance0();
         _balance1 = balance1();
 
-        _update(_balance0, _balance1, _slot0.reserve0, _slot0.reserve1);
+        _update(_balance0, _balance1, _reserve0, _reserve1);
         _slot0 = slot0;
         if (feeOn) kLast = uint(_slot0.reserve0) * _slot0.reserve1; // reserve0 and reserve1 are up-to-date
         emit Burn(msg.sender, amount0, amount1, recipient);
@@ -176,7 +186,10 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         require(amount0Out > 0 || amount1Out > 0, 'Simswap: INSUFFICIENT_OUTPUT_AMOUNT');
 
         Slot0 memory _slot0 = slot0;
-        require(amount0Out < _slot0.reserve0 && amount1Out < _slot0.reserve1, 'Simswap: INSUFFICIENT_LIQUIDITY');
+        uint112 _reserve0 = _slot0.reserve0;
+        uint112 _reserve1 = _slot0.reserve1;
+
+        require(amount0Out < _reserve0 && amount1Out < _reserve1, 'Simswap: INSUFFICIENT_LIQUIDITY');
         
         uint256 _balance0;
         uint256 _balance1;
@@ -191,16 +204,20 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         _balance0 = balance0();
         _balance1 = balance1();
         }
-        uint256 amount0In = _balance0 > _slot0.reserve0 - amount0Out ? _balance0 - (_slot0.reserve0 - amount0Out) : 0;
-        uint256 amount1In = _balance1 > _slot0.reserve1 - amount1Out ? _balance1 - (_slot0.reserve1 - amount1Out) : 0;
+
+        uint256 res0 = _reserve0 - amount0Out;
+        uint256 res1 = _reserve1 - amount1Out;
+
+        uint256 amount0In = _balance0 > res0 ? _balance0 - res0 : 0;
+        uint256 amount1In = _balance1 > res1 ? _balance1 - res1 : 0;
         require(amount0In > 0 || amount1In > 0, 'Simswap: INSUFFICIENT_INPUT_AMOUNT');
         { // scope for reserve{0,1}Adjusted, avoids stack too deep errors
         uint256 balance0Adjusted = _balance0 * 1000 - amount0In * 3;
         uint256 balance1Adjusted = _balance1 * 1000 - amount1In * 3;
-        require(balance0Adjusted * balance1Adjusted >= uint256(_slot0.reserve0) * _slot0.reserve1 * 1000000, 'Simswap: K');
+        require(balance0Adjusted * balance1Adjusted >= uint256(_reserve0) * _reserve1 * 1000000, 'Simswap: K');
         }
 
-        _update(_balance0, _balance1, _slot0.reserve0, _slot0.reserve1);
+        _update(_balance0, _balance1, _reserve0, _reserve1);
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, recipient);
     }
 
