@@ -10,8 +10,8 @@ import './libraries/FixedPoint112.sol';
 import './interfaces/IERC20Minimal.sol';
 import './interfaces/ISimswapFactory.sol';
 import './interfaces/ISimswapCallee.sol';
-import './libraries/NoDelegateCall.sol';
-import './libraries/ReentrancyGuard.sol';
+import './modifiers/NoDelegateCall.sol';
+import './modifiers/ReentrancyGuard.sol';
 
 contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGuard {
     using LowGasSafeMath for uint256;
