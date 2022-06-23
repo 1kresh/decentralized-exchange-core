@@ -3,8 +3,9 @@ pragma solidity ^0.8.0;
 
 import './interfaces/ISimswapFactory.sol';
 
-import './SimswapPoolDeployer.sol';
 import './modifiers/NoDelegateCall.sol';
+
+import './SimswapPoolDeployer.sol';
 
 contract SimswapFactory is ISimswapFactory, SimswapPoolDeployer, NoDelegateCall {
     address public override feeTo;

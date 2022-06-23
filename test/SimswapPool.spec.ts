@@ -1,9 +1,11 @@
 import chai, { expect } from 'chai'
-import { Contract, BigNumber, constants } from 'ethers'
+import { Contract, BigNumber, constants, utils } from 'ethers'
 import { solidity, MockProvider, createFixtureLoader } from 'ethereum-waffle'
 
 import { expandTo18Decimals, mineBlock, encodePrice } from './shared/utilities'
 import { poolFixture } from './shared/fixtures'
+
+import SimswapPool from '../build/SimswapPool.json'
 
 const MINIMUM_LIQUIDITY = BigNumber.from(10).pow(3)
 
@@ -37,6 +39,9 @@ describe('SimswapPool', () => {
   })
 
   it('mint', async () => {
+    const bytecode = `0x${SimswapPool.evm.bytecode.object}`
+    console.debug(utils.keccak256(bytecode));
+
     const token0Amount = expandTo18Decimals(1)
     const token1Amount = expandTo18Decimals(4)
     await token0.transfer(pool.address, token0Amount)

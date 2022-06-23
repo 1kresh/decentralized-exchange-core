@@ -1,17 +1,21 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity ^0.8.0;
 
-import './SimswapERC20.sol';
+import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+
+import './interfaces/ISimswapCallee.sol';
+import './interfaces/ISimswapFactory.sol';
+
+import './libraries/FixedPoint112.sol';
 import './interfaces/ISimswapPool.sol';
 import './interfaces/ISimswapPoolDeployer.sol';
-import './libraries/Math.sol';
 import './libraries/LowGasSafeMath.sol';
-import './libraries/FixedPoint112.sol';
-import './interfaces/IERC20Minimal.sol';
-import './interfaces/ISimswapFactory.sol';
-import './interfaces/ISimswapCallee.sol';
+import './libraries/Math.sol';
+
 import './modifiers/NoDelegateCall.sol';
-import './modifiers/ReentrancyGuard.sol';
+
+import './SimswapERC20.sol';
 
 contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGuard {
     using LowGasSafeMath for uint256;
@@ -44,12 +48,16 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     /// @inheritdoc ISimswapPoolState
     uint256 public override kLast; 
 
+    constructor() {
+        (factory, token0, token1) = ISimswapPoolDeployer(msg.sender).parameters();
+    }
+    
     /// @dev Get the pool's balance of token0
     /// @dev This function is gas optimized to avoid a redundant extcodesize check in addition to the returndatasize
     /// check
     function balance0() private view returns (uint256) {
         (bool success, bytes memory data) =
-            token0.staticcall(abi.encodeWithSelector(IERC20Minimal.balanceOf.selector, address(this)));
+            token0.staticcall(abi.encodeWithSelector(IERC20.balanceOf.selector, address(this)));
         require(success && data.length >= 32);
         return abi.decode(data, (uint256));
     }
@@ -59,7 +67,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     /// check
     function balance1() private view returns (uint256) {
         (bool success, bytes memory data) =
-            token1.staticcall(abi.encodeWithSelector(IERC20Minimal.balanceOf.selector, address(this)));
+            token1.staticcall(abi.encodeWithSelector(IERC20.balanceOf.selector, address(this)));
         require(success && data.length >= 32);
         return abi.decode(data, (uint256));
     }
@@ -67,11 +75,6 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     /// @dev Returns the block timestamp truncated to 32 bits, i.e. mod 2**32. This method is overridden in tests.
     function _blockTimestamp() internal view virtual returns (uint32) {
         return uint32(block.timestamp); // truncation is desired
-    }
-
-
-    constructor() {
-        (factory, token0, token1) = ISimswapPoolDeployer(msg.sender).parameters();
     }
 
     function _safeTransfer(address token, address recipient, uint256 value) private {
@@ -84,7 +87,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         require(_balance0 <= type(uint112).max && _balance1 <= type(uint112).max, 'Simswap: OVERFLOW');
         uint32 blockTimestamp = _blockTimestamp();
         uint32 timeElapsed = blockTimestamp - slot0.blockTimestampLast; // overflow is desired
-        if (timeElapsed > 0 && _reserve0 != 0 && _reserve1 != 0) {
+        if (timeElapsed != 0 && _reserve0 != 0 && _reserve1 != 0) {
             // * never overflows, and + overflow is desired
             price0CumulativeLast += LowGasSafeMath.mul(FixedPoint112.encode(_reserve1).uqdiv(_reserve0), timeElapsed);
             price1CumulativeLast += LowGasSafeMath.mul(FixedPoint112.encode(_reserve0).uqdiv(_reserve1), timeElapsed);
@@ -112,7 +115,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
                     uint256 numerator = totalSupply() * (rootK - rootKLast);
                     uint256 denominator = rootK * 5 + rootKLast;
                     uint256 liquidity = numerator / denominator;
-                    if (liquidity > 0) _mint(feeTo, liquidity);
+                    if (liquidity != 0) _mint(feeTo, liquidity);
                 }
             }
         } else if (_kLast != 0) {
@@ -123,9 +126,8 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     /// @inheritdoc ISimswapPoolActions
     /// @dev This low-level function should be called from a contract which performs important safety checks
     function mint(address recipient) external override nonReentrant returns (uint256 liquidity) {
-        Slot0 memory _slot0 = slot0;
-        uint112 _reserve0 = _slot0.reserve0;
-        uint112 _reserve1 = _slot0.reserve1;
+        uint112 _reserve0 = slot0.reserve0;
+        uint112 _reserve1 = slot0.reserve1;
 
         uint256 _balance0 = balance0();
         uint256 _balance1 = balance1();
@@ -140,22 +142,20 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         } else {
             liquidity = Math.min(amount0 * _totalSupply / _reserve0, amount1 * _totalSupply / _reserve1);
         }
-        require(liquidity > 0, 'Simswap: INSUFFICIENT_LIQUIDITY_MINTED');
+        require(liquidity != 0, 'Simswap: INSUFFICIENT_LIQUIDITY_MINTED');
         _mint(recipient, liquidity);
 
         _update(_balance0, _balance1, _reserve0, _reserve1);
 
-        _slot0 = slot0;
-        if (feeOn) kLast = uint256(_slot0.reserve0) * _slot0.reserve1; // reserve0 and reserve1 are up-to-date
+        if (feeOn) kLast = uint256(slot0.reserve0) * slot0.reserve1; // reserve0 and reserve1 are up-to-date
         emit Mint(msg.sender, amount0, amount1);
     }
 
     /// @inheritdoc ISimswapPoolActions
     /// @dev This low-level function should be called from a contract which performs important safety checks
     function burn(address recipient) external override nonReentrant returns (uint256 amount0, uint256 amount1) {
-        Slot0 memory _slot0 = slot0;
-        uint112 _reserve0 = _slot0.reserve0;
-        uint112 _reserve1 = _slot0.reserve1;
+        uint112 _reserve0 = slot0.reserve0;
+        uint112 _reserve1 = slot0.reserve1;
 
         address _token0 = token0;                                // gas savings
         address _token1 = token1;                                // gas savings
@@ -167,7 +167,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         uint256 _totalSupply = totalSupply(); // gas savings, must be defined here since totalSupply can update in _mintFee
         amount0 = liquidity * _balance0 / _totalSupply; // using balances ensures pro-rata distribution
         amount1 = liquidity * _balance1 / _totalSupply; // using balances ensures pro-rata distribution
-        require(amount0 > 0 && amount1 > 0, 'Simswap: INSUFFICIENT_LIQUIDITY_BURNED');
+        require(amount0 != 0 && amount1 != 0, 'Simswap: INSUFFICIENT_LIQUIDITY_BURNED');
         _burn(address(this), liquidity);
         _safeTransfer(_token0, recipient, amount0);
         _safeTransfer(_token1, recipient, amount1);
@@ -175,19 +175,17 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         _balance1 = balance1();
 
         _update(_balance0, _balance1, _reserve0, _reserve1);
-        _slot0 = slot0;
-        if (feeOn) kLast = uint(_slot0.reserve0) * _slot0.reserve1; // reserve0 and reserve1 are up-to-date
+        
+        if (feeOn) kLast = uint(slot0.reserve0) * slot0.reserve1; // reserve0 and reserve1 are up-to-date
         emit Burn(msg.sender, amount0, amount1, recipient);
     }
 
     /// @inheritdoc ISimswapPoolActions
     /// @dev This low-level function should be called from a contract which performs important safety checks
     function swap(uint256 amount0Out, uint256 amount1Out, address recipient, bytes calldata data) external override nonReentrant noDelegateCall {
-        require(amount0Out > 0 || amount1Out > 0, 'Simswap: INSUFFICIENT_OUTPUT_AMOUNT');
+        require(amount0Out != 0 || amount1Out != 0, 'Simswap: INSUFFICIENT_OUTPUT_AMOUNT');
 
-        Slot0 memory _slot0 = slot0;
-
-        require(amount0Out < _slot0.reserve0 && amount1Out < _slot0.reserve1, 'Simswap: INSUFFICIENT_LIQUIDITY');
+        require(amount0Out < slot0.reserve0 && amount1Out < slot0.reserve1, 'Simswap: INSUFFICIENT_LIQUIDITY');
         
         uint256 _balance0;
         uint256 _balance1;
@@ -196,22 +194,22 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         address _token1 = token1;
         require(recipient != _token0 && recipient != _token1, 'Simswap: INVALID_TO');
 
-        if (amount0Out > 0) _safeTransfer(_token0, recipient, amount0Out); // optimistically transfer tokens
-        if (amount1Out > 0) _safeTransfer(_token1, recipient, amount1Out); // optimistically transfer tokens
-        if (data.length > 0) ISimswapCallee(recipient).simswapCall(msg.sender, amount0Out, amount1Out, data);
+        if (amount0Out != 0) _safeTransfer(_token0, recipient, amount0Out); // optimistically transfer tokens
+        if (amount1Out != 0) _safeTransfer(_token1, recipient, amount1Out); // optimistically transfer tokens
+        if (data.length != 0) ISimswapCallee(recipient).simswapCall(msg.sender, amount0Out, amount1Out, data);
         _balance0 = balance0();
         _balance1 = balance1();
         }
-        uint256 amount0In = _balance0 > _slot0.reserve0 - amount0Out ? _balance0 - (_slot0.reserve0 - amount0Out) : 0;
-        uint256 amount1In = _balance1 > _slot0.reserve1 - amount1Out ? _balance1 - (_slot0.reserve1 - amount1Out) : 0;
-        require(amount0In > 0 || amount1In > 0, 'Simswap: INSUFFICIENT_INPUT_AMOUNT');
+        uint256 amount0In = _balance0 > slot0.reserve0 - amount0Out ? _balance0 - (slot0.reserve0 - amount0Out) : 0;
+        uint256 amount1In = _balance1 > slot0.reserve1 - amount1Out ? _balance1 - (slot0.reserve1 - amount1Out) : 0;
+        require(amount0In != 0 || amount1In != 0, 'Simswap: INSUFFICIENT_INPUT_AMOUNT');
         { // scope for reserve{0,1}Adjusted, avoids stack too deep errors
         uint256 balance0Adjusted = _balance0 * 1000 - amount0In * 3;
         uint256 balance1Adjusted = _balance1 * 1000 - amount1In * 3;
-        require(balance0Adjusted * balance1Adjusted >= uint256(_slot0.reserve0) * _slot0.reserve1 * 1000000, 'Simswap: K');
+        require(balance0Adjusted * balance1Adjusted >= uint256(slot0.reserve0) * slot0.reserve1 * 1000000, 'Simswap: K');
         }
 
-        _update(_balance0, _balance1, _slot0.reserve0, _slot0.reserve1);
+        _update(_balance0, _balance1, slot0.reserve0, slot0.reserve1);
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, recipient);
     }
 
@@ -219,14 +217,12 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     function skim(address recipient) external override nonReentrant {
         address _token0 = token0; // gas savings
         address _token1 = token1; // gas savings
-        Slot0 memory _slot0 = slot0;
-        _safeTransfer(_token0, recipient, balance0() - _slot0.reserve0);
-        _safeTransfer(_token1, recipient, balance1() - _slot0.reserve1);
+        _safeTransfer(_token0, recipient, balance0() - slot0.reserve0);
+        _safeTransfer(_token1, recipient, balance1() - slot0.reserve1);
     }
 
     /// @dev Force reserves to match balances
     function sync() external override nonReentrant {
-        Slot0 memory _slot0 = slot0;
-        _update(balance0(), balance1(), _slot0.reserve0, _slot0.reserve1);
+        _update(balance0(), balance1(), slot0.reserve0, slot0.reserve1);
     }
 }

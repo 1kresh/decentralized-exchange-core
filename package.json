@@ -1,7 +1,7 @@
 {
   "name": "@simswap/decentralized-exchange-core",
   "description": "🎛 Core contracts for the Simswap protocol",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://decentralized-exchange-beta.vercel.app/",
   "repository": {
     "type": "git",
@@ -10,7 +10,6 @@
   "keywords": [
     "simswap",
     "ethereum",
-    "v2",
     "core"
   ],
   "files": [
@@ -39,11 +38,14 @@
     "lint:fix": "yarn prettier ./test/*.ts --write",
     "clean": "rimraf ./build/",
     "precompile": "yarn clean",
-    "compile": "waffle .waffle.json"
+    "compile": "waffle .waffle.json",
+    "pretest": "yarn compile",
+    "test": "mocha",
+    "prepublishOnly": "yarn test"
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "@simswap/decentralized-exchange-core": "^1.0.0",
+    "@openzeppelin/contracts": "^4.6.0",
     "core-js": "^3.23.1"
   },
   "bugs": {

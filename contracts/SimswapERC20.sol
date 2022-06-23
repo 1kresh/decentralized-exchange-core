@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import './interfaces/ISimswapERC20.sol';
+
 import './libraries/LowGasSafeMath.sol';
 
 contract SimswapERC20 is ISimswapERC20 {
@@ -24,6 +25,11 @@ contract SimswapERC20 is ISimswapERC20 {
 
     mapping(address => uint256) private _nonces;
 
+    constructor() {
+        INITIAL_CHAIN_ID = block.chainid;
+        INITIAL_DOMAIN_SEPARATOR = computeDomainSeparator();
+    }
+    
     function name() public pure override returns (string memory) {
         return _name;
     }
@@ -51,12 +57,6 @@ contract SimswapERC20 is ISimswapERC20 {
     function nonces(address owner) public view override returns (uint256) { 
         return _nonces[owner];
     }
-
-    constructor() {
-        INITIAL_CHAIN_ID = block.chainid;
-        INITIAL_DOMAIN_SEPARATOR = computeDomainSeparator();
-    }
-
 
     function _mint(address account, uint256 amount) internal {
         require(account != address(0), "SimswapERC20: mint to the zero address");
