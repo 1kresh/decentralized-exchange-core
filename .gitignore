@@ -1,2 +1,5 @@
 node_modules/
 build/
+yarn-error.txt
+yarn.lock
+package-lock.json
