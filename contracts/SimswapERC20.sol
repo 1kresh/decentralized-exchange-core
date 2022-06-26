@@ -125,7 +125,7 @@ contract SimswapERC20 is ISimswapERC20 {
         {
             uint256 blockTimestamp = block.timestamp;
             if (deadline < blockTimestamp)
-                revert Simswap_EXPIRED(deadline, blockTimestamp);
+                revert SimswapERC20_EXPIRED(deadline, blockTimestamp);
         }        
 
         unchecked {

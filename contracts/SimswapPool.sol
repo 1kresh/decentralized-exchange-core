@@ -80,7 +80,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     function _safeTransfer(address token, address recipient, uint256 value) private {
         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR, recipient, value));
         if (success == false || (data.length != 0 && abi.decode(data, (bool)) == false))
-            revert Simswap_TRANFER_FAILED(token, recipient, value);
+            revert SimswapPool_TRANFER_FAILED(token, recipient, value);
     }
 
     /// @dev Update reserves and, on the first call per block, price accumulators
@@ -90,7 +90,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
             max112up = type(uint112).max + 1;
         }
         if (_balance0 >= max112up || _balance1 >= max112up)
-            revert Simswap_OVERFLOW(_balance0, _balance1);
+            revert SimswapPool_OVERFLOW(_balance0, _balance1);
 
         uint32 blockTimestamp = _blockTimestamp();
         uint32 timeElapsed;
@@ -163,7 +163,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
             }
         }
         if (liquidity == 0)
-            revert Simswap_INSUFFICIENT_LIQUIDITY_MINTED(amount0, amount1, _reserve0, _reserve1, _totalSupply);
+            revert SimswapPool_INSUFFICIENT_LIQUIDITY_MINTED(amount0, amount1, _reserve0, _reserve1, _totalSupply);
 
         _mint(recipient, liquidity);
 
@@ -199,7 +199,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         }
 
         if (amount0 == 0 || amount1 == 0)
-            revert Simswap_INSUFFICIENT_LIQUIDITY_BURNED(amount0, amount1, _balance0, _balance1, _totalSupply);
+            revert SimswapPool_INSUFFICIENT_LIQUIDITY_BURNED(amount0, amount1, _balance0, _balance1, _totalSupply);
 
         _burn(address(this), liquidity);
         _safeTransfer(_token0, recipient, amount0);
@@ -219,13 +219,13 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     /// @dev This low-level function should be called from a contract which performs important safety checks
     function swap(uint256 amount0Out, uint256 amount1Out, address recipient, bytes calldata data) public override nonReentrant noDelegateCall {
         if (amount0Out == 0 && amount1Out == 0)
-            revert Simswap_INSUFFICIENT_OUTPUT_AMOUNT(amount0Out, amount1Out);
+            revert SimswapPool_INSUFFICIENT_OUTPUT_AMOUNT(amount0Out, amount1Out);
         
         uint112 _reserve0 = slot0.reserve0;
         uint112 _reserve1 = slot0.reserve1;
 
         if (amount0Out >= _reserve0 || amount1Out >= _reserve1)
-            revert Simswap_INSUFFICIENT_LIQUIDITY(amount0Out, amount1Out, _reserve0, _reserve1);
+            revert SimswapPool_INSUFFICIENT_LIQUIDITY(amount0Out, amount1Out, _reserve0, _reserve1);
         
         uint256 _balance0;
         uint256 _balance1;
@@ -234,7 +234,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
             address _token1 = token1;
             
             if (recipient == _token0 || recipient == _token1)
-                revert Simswap_INVALID_TO(_token0, _token1, recipient);
+                revert SimswapPool_INVALID_TO(_token0, _token1, recipient);
 
             if (amount0Out != 0)
                 _safeTransfer(_token0, recipient, amount0Out); // optimistically transfer tokens
@@ -257,14 +257,14 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
         }
         
         if (amount0In == 0 && amount1In == 0)
-            revert Simswap_INSUFFICIENT_INPUT_AMOUNT(amount0Out, amount1Out, amount0In, amount1In, _balance0, _balance1);
+            revert SimswapPool_INSUFFICIENT_INPUT_AMOUNT(amount0Out, amount1Out, amount0In, amount1In, _balance0, _balance1);
 
         { // scope for reserve{0,1}Adjusted, avoids stack too deep errors
             uint256 balance0Adjusted = _balance0 * 1000 - amount0In * 3;
             uint256 balance1Adjusted = _balance1 * 1000 - amount1In * 3;
 
             if (balance0Adjusted * balance1Adjusted < uint256(_reserve0) * _reserve1 * 1000000)
-                revert Simswap_K(balance0Adjusted, balance1Adjusted, _reserve0, _reserve1);
+                revert SimswapPool_K(balance0Adjusted, balance1Adjusted, _reserve0, _reserve1);
         }
 
         _update(_balance0, _balance1, _reserve0, _reserve1);
