@@ -3,11 +3,7 @@ pragma solidity ^0.8.0;
 
 import './interfaces/ISimswapERC20.sol';
 
-import './libraries/LowGasSafeMath.sol';
-
 contract SimswapERC20 is ISimswapERC20 {
-    using LowGasSafeMath for uint256;
-
     string private constant _name = 'Simswap';
     string private constant _symbol = 'SIMP';
     uint8 private constant _decimals = 18;
@@ -29,7 +25,7 @@ contract SimswapERC20 is ISimswapERC20 {
         INITIAL_CHAIN_ID = block.chainid;
         INITIAL_DOMAIN_SEPARATOR = computeDomainSeparator();
     }
-    
+
     function name() public pure override returns (string memory) {
         return _name;
     }
@@ -59,49 +55,51 @@ contract SimswapERC20 is ISimswapERC20 {
     }
 
     function _mint(address account, uint256 amount) internal {
-        require(account != address(0), "SimswapERC20: mint to the zero address");
+        _totalSupply += amount;
+        _balances[account] += amount;
 
-        _totalSupply = _totalSupply + amount;
-        _balances[account] = _balances[account] + amount;
         emit Transfer(address(0), account, amount);
     }
 
     function _burn(address account, uint256 amount) internal {
-        require(account != address(0), "SimswapERC20: burn from the zero address");
+        if (account == address(0))
+            revert SimswapERC20_BURN_FROM_ZERO_ADDRESS(account, amount);
 
-        uint256 accountBalance = _balances[account];
-        _balances[account] = accountBalance - amount;
-        _totalSupply = _totalSupply - amount;
+        _balances[account] -= amount;
+        _totalSupply -= amount;
 
         emit Transfer(account, address(0), amount);
     }
 
-    function _approve(
-        address owner,
-        address spender,
-        uint256 amount
-    ) internal {
-        require(owner != address(0), "SimswapERC20: approve from the zero address");
-        require(spender != address(0), "SimswapERC20: approve to the zero address");
+    function _approve(address owner, address spender, uint256 amount) internal {
+        if (owner == address(0))
+            revert SimswapERC20_APPROVE_FROM_ZERO_ADDRESS(owner, spender, amount);
+        if (spender == address(0))
+            revert SimswapERC20_APPROVE_TO_ZERO_ADDRESS(owner, spender, amount);
 
         _allowances[owner][spender] = amount;
+
         emit Approval(owner, spender, amount);
     }
 
     function _transfer(address from, address to, uint256 amount) internal {
-        require(from != address(0), "SimswapERC20: transfer from the zero address");
-        require(to != address(0), "SimswapERC20: transfer to the zero address");
-        _balances[from] = _balances[from] - amount;
-        _balances[to] = _balances[to] + amount;
+        if (from == address(0))
+            revert SimswapERC20_TRANSFER_FROM_ZERO_ADDRESS(from, to, amount);
+        if (to == address(0))
+            revert SimswapERC20_TRANSFER_TO_ZERO_ADDRESS(from, to, amount);
+
+        _balances[from] -= amount;
+        _balances[to] += amount;
+
         emit Transfer(from, to, amount);
     }
 
-    function approve(address spender, uint256 amount) external override returns (bool) {
+    function approve(address spender, uint256 amount) public override returns (bool) {
         _approve(msg.sender, spender, amount);
         return true;
     }
 
-    function transfer(address account, uint256 amount) external override returns (bool) {
+    function transfer(address account, uint256 amount) public override returns (bool) {
         _transfer(msg.sender, account, amount);
         return true;
     }
@@ -117,14 +115,18 @@ contract SimswapERC20 is ISimswapERC20 {
         }
     }
 
-    function transferFrom(address from, address to, uint256 amount) external override returns (bool) {
+    function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
         _spendAllowance(from, to, amount);
         _transfer(from, to, amount);
         return true;
     }
 
-    function permit(address owner, address spender, uint256 amount, uint256 deadline, uint8 v, bytes32 r, bytes32 s) external override {
-        require(deadline >= block.timestamp, 'Simswap: EXPIRED');
+    function permit(address owner, address spender, uint256 amount, uint256 deadline, uint8 v, bytes32 r, bytes32 s) public override {
+        {
+            uint256 blockTimestamp = block.timestamp;
+            if (deadline < blockTimestamp)
+                revert Simswap_EXPIRED(deadline, blockTimestamp);
+        }        
 
         unchecked {
             address recoveredAddress = ecrecover(

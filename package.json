@@ -1,7 +1,7 @@
 {
-  "name": "@simswap/decentralized-exchange-core",
+  "name": "@simswap/core",
   "description": "🎛 Core contracts for the Simswap protocol",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "homepage": "https://decentralized-exchange-beta.vercel.app/",
   "repository": {
     "type": "git",
@@ -17,7 +17,8 @@
     "build"
   ],
   "engines": {
-    "node": ">=16"
+    "npm": "^8.0",
+    "node": "^16.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.1",
@@ -51,7 +52,6 @@
   "bugs": {
     "url": "https://github.com/1kresh/decentralized-exchange-core/issues"
   },
-  "main": "index.js",
   "directories": {
     "test": "test"
   },

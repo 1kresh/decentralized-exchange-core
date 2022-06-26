@@ -17,7 +17,7 @@ describe('SimswapERC20', () => {
     ganacheOptions: {
       hardfork: 'london',
       mnemonic: 'simple simple simple simple simple simple simple simple simple simple simple simple',
-      gasLimit: 9999999,
+      gasLimit: 99999999,
     },
   })
   const [wallet, other] = provider.getWallets()

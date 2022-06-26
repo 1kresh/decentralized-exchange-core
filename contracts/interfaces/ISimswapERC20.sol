@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity ^0.8.0;
 
-interface ISimswapERC20 {
+import './erc20/ISimswapERC20Errors.sol';
+
+interface ISimswapERC20 is ISimswapERC20Errors {
     event Approval(address indexed owner, address indexed spender, uint256 amount);
     event Transfer(address indexed from, address indexed to, uint256 amount);
     

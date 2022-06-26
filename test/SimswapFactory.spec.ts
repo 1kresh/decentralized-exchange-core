@@ -19,7 +19,7 @@ describe('SimswapFactory', () => {
     ganacheOptions: {
       hardfork: 'london',
       mnemonic: 'simple simple simple simple simple simple simple simple simple simple simple simple',
-      gasLimit: 9999999,
+      gasLimit: 99999999,
     },
   })
   const [wallet, other] = provider.getWallets()
@@ -48,7 +48,7 @@ describe('SimswapFactory', () => {
     await expect(factory.createPool(...tokens.slice().reverse())).to.be.reverted // Simswap: POOL_EXISTS
     expect(await factory.getPool(...tokens)).to.eq(create2Address)
     expect(await factory.getPool(...tokens.slice().reverse())).to.eq(create2Address)
-    expect(await factory.allPools(0)).to.eq(create2Address)
+    expect((await factory.allPools())[0]).to.eq(create2Address)
     expect(await factory.allPoolsLength()).to.eq(1)
 
     const pool = new Contract(create2Address, JSON.stringify(SimswapPool.abi), provider)
@@ -68,19 +68,19 @@ describe('SimswapFactory', () => {
   it('createPool:gas', async () => {
     const tx = await factory.createPool(...TEST_ADDRESSES)
     const receipt = await tx.wait()
-    expect(receipt.gasUsed).to.eq(2512920)
+    expect(receipt.gasUsed).to.eq(1907717)
   })
 
   it('setFeeTo', async () => {
-    await expect(factory.connect(other).setFeeTo(other.address)).to.be.revertedWith('Simswap: FORBIDDEN')
+    await expect(factory.connect(other).setFeeTo(other.address)).to.be.reverted
     await factory.setFeeTo(wallet.address)
     expect(await factory.feeTo()).to.eq(wallet.address)
   })
 
   it('setFeeToSetter', async () => {
-    await expect(factory.connect(other).setFeeToSetter(other.address)).to.be.revertedWith('Simswap: FORBIDDEN')
+    await expect(factory.connect(other).setFeeToSetter(other.address)).to.be.reverted
     await factory.setFeeToSetter(other.address)
     expect(await factory.feeToSetter()).to.eq(other.address)
-    await expect(factory.setFeeToSetter(wallet.address)).to.be.revertedWith('Simswap: FORBIDDEN')
+    await expect(factory.setFeeToSetter(wallet.address)).to.be.reverted
   })
 })

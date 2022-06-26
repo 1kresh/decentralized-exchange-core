@@ -12,7 +12,7 @@ const MINIMUM_LIQUIDITY = BigNumber.from(10).pow(3)
 chai.use(solidity)
 
 const overrides = {
-  gasLimit: 9999999,
+  gasLimit: 99999999,
 }
 
 describe('SimswapPool', () => {
@@ -20,7 +20,7 @@ describe('SimswapPool', () => {
     ganacheOptions: {
       hardfork: 'london',
       mnemonic: 'simple simple simple simple simple simple simple simple simple simple simple simple',
-      gasLimit: 9999999,
+      gasLimit: 99999999,
     },
   })
   const [wallet, other] = provider.getWallets()
@@ -40,7 +40,6 @@ describe('SimswapPool', () => {
 
   it('mint', async () => {
     const bytecode = `0x${SimswapPool.evm.bytecode.object}`
-    console.debug(utils.keccak256(bytecode));
 
     const token0Amount = expandTo18Decimals(1)
     const token1Amount = expandTo18Decimals(4)
@@ -62,9 +61,9 @@ describe('SimswapPool', () => {
     expect(await pool.balanceOf(wallet.address)).to.eq(expectedLiquidity.sub(MINIMUM_LIQUIDITY))
     expect(await token0.balanceOf(pool.address)).to.eq(token0Amount)
     expect(await token1.balanceOf(pool.address)).to.eq(token1Amount)
-    const reserves = await pool.getReserves()
-    expect(reserves[0]).to.eq(token0Amount)
-    expect(reserves[1]).to.eq(token1Amount)
+    const slot0 = await pool.slot0()
+    expect(slot0[0]).to.eq(token0Amount)
+    expect(slot0[1]).to.eq(token1Amount)
   })
 
   async function addLiquidity(token0Amount: BigNumber, token1Amount: BigNumber) {
@@ -88,9 +87,7 @@ describe('SimswapPool', () => {
       const [swapAmount, token0Amount, token1Amount, expectedOutputAmount] = swapTestCase
       await addLiquidity(token0Amount, token1Amount)
       await token0.transfer(pool.address, swapAmount)
-      await expect(pool.swap(0, expectedOutputAmount.add(1), wallet.address, '0x', overrides)).to.be.revertedWith(
-        'Simswap: K'
-      )
+      await expect(pool.swap(0, expectedOutputAmount.add(1), wallet.address, '0x', overrides)).to.be.reverted
       await pool.swap(0, expectedOutputAmount, wallet.address, '0x', overrides)
     })
   })
@@ -106,7 +103,7 @@ describe('SimswapPool', () => {
       const [outputAmount, token0Amount, token1Amount, inputAmount] = optimisticTestCase
       await addLiquidity(token0Amount, token1Amount)
       await token0.transfer(pool.address, inputAmount)
-      await expect(pool.swap(outputAmount.add(1), 0, wallet.address, '0x', overrides)).to.be.revertedWith('Simswap: K')
+      await expect(pool.swap(outputAmount.add(1), 0, wallet.address, '0x', overrides)).to.be.reverted
       await pool.swap(outputAmount, 0, wallet.address, '0x', overrides)
     })
   })
@@ -127,9 +124,9 @@ describe('SimswapPool', () => {
       .to.emit(pool, 'Swap')
       .withArgs(wallet.address, swapAmount, 0, 0, expectedOutputAmount, wallet.address)
 
-    const reserves = await pool.getReserves()
-    expect(reserves[0]).to.eq(token0Amount.add(swapAmount))
-    expect(reserves[1]).to.eq(token1Amount.sub(expectedOutputAmount))
+    const slot0 = await pool.slot0()
+    expect(slot0[0]).to.eq(token0Amount.add(swapAmount))
+    expect(slot0[1]).to.eq(token1Amount.sub(expectedOutputAmount))
     expect(await token0.balanceOf(pool.address)).to.eq(token0Amount.add(swapAmount))
     expect(await token1.balanceOf(pool.address)).to.eq(token1Amount.sub(expectedOutputAmount))
     const totalSupplyToken0 = await token0.totalSupply()
@@ -154,9 +151,9 @@ describe('SimswapPool', () => {
       .to.emit(pool, 'Swap')
       .withArgs(wallet.address, 0, swapAmount, expectedOutputAmount, 0, wallet.address)
 
-    const reserves = await pool.getReserves()
-    expect(reserves[0]).to.eq(token0Amount.sub(expectedOutputAmount))
-    expect(reserves[1]).to.eq(token1Amount.add(swapAmount))
+    const slot0 = await pool.slot0()
+    expect(slot0[0]).to.eq(token0Amount.sub(expectedOutputAmount))
+    expect(slot0[1]).to.eq(token1Amount.add(swapAmount))
     expect(await token0.balanceOf(pool.address)).to.eq(token0Amount.sub(expectedOutputAmount))
     expect(await token1.balanceOf(pool.address)).to.eq(token1Amount.add(swapAmount))
     const totalSupplyToken0 = await token0.totalSupply()
@@ -180,7 +177,7 @@ describe('SimswapPool', () => {
     await mineBlock(provider, (await provider.getBlock('latest')).timestamp + 1)
     const tx = await pool.swap(expectedOutputAmount, 0, wallet.address, '0x', overrides)
     const receipt = await tx.wait()
-    expect(receipt.gasUsed).to.eq(73462)
+    expect(receipt.gasUsed).to.eq(60477)
   })
 
   it('burn', async () => {
@@ -216,33 +213,28 @@ describe('SimswapPool', () => {
     const token0Amount = expandTo18Decimals(3)
     const token1Amount = expandTo18Decimals(3)
     await addLiquidity(token0Amount, token1Amount)
-
-    const blockTimestamp = (await pool.getReserves())[2]
+    const blockTimestamp = (await pool.slot0())[2]
     await mineBlock(provider, blockTimestamp + 1)
     await pool.sync(overrides)
-
     const initialPrice = encodePrice(token0Amount, token1Amount)
     expect(await pool.price0CumulativeLast()).to.eq(initialPrice[0])
     expect(await pool.price1CumulativeLast()).to.eq(initialPrice[1])
-    expect((await pool.getReserves())[2]).to.eq(blockTimestamp + 1)
-
+    expect((await pool.slot0())[2]).to.eq(blockTimestamp + 1)
     const swapAmount = expandTo18Decimals(3)
     await token0.transfer(pool.address, swapAmount)
     await mineBlock(provider, blockTimestamp + 10)
     // swap to a new price eagerly instead of syncing
     await pool.swap(0, expandTo18Decimals(1), wallet.address, '0x', overrides) // make the price nice
-
     expect(await pool.price0CumulativeLast()).to.eq(initialPrice[0].mul(10))
     expect(await pool.price1CumulativeLast()).to.eq(initialPrice[1].mul(10))
-    expect((await pool.getReserves())[2]).to.eq(blockTimestamp + 10)
+    expect((await pool.slot0())[2]).to.eq(blockTimestamp + 10)
 
     await mineBlock(provider, blockTimestamp + 20)
     await pool.sync(overrides)
-
     const newPrice = encodePrice(expandTo18Decimals(6), expandTo18Decimals(2))
     expect(await pool.price0CumulativeLast()).to.eq(initialPrice[0].mul(10).add(newPrice[0].mul(10)))
     expect(await pool.price1CumulativeLast()).to.eq(initialPrice[1].mul(10).add(newPrice[1].mul(10)))
-    expect((await pool.getReserves())[2]).to.eq(blockTimestamp + 20)
+    expect((await pool.slot0())[2]).to.eq(blockTimestamp + 20)
   })
 
   it('feeTo:off', async () => {

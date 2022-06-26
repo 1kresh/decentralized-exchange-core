@@ -19,38 +19,51 @@ contract SimswapFactory is ISimswapFactory, SimswapPoolDeployer, NoDelegateCall 
         feeTo = _feeTo;
     }
 
-    function getPool(address tokenA, address tokenB) external override view returns (address) {
+    function getPool(address tokenA, address tokenB) public override view returns (address) {
         return _pools[tokenA][tokenB];
     }
 
-    function allPools() external override view returns (address[] memory) {
+    function allPools() public override view returns (address[] memory) {
         return _allPools;
     }
 
-    function allPoolsLength() external override view returns (uint256) {
+    function allPoolsLength() public override view returns (uint256) {
         return _allPools.length;
     }
 
-    function createPool(address tokenA, address tokenB) external override noDelegateCall returns (address pool) {
-        require(tokenA != tokenB);
+    function createPool(address tokenA, address tokenB) public override noDelegateCall returns (address pool) {
+        if (tokenA == tokenB)
+            revert SimswapFactory_SAME_TOKENS(tokenA);
+
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-        require(token0 != address(0));
-        require(_pools[token0][token1] == address(0), "Simswap: POOL EXISTS");
+
+        if (token0 == address(0))
+            revert SimswapFactory_ZERO_ADDRESS();
+        if (_pools[token0][token1] != address(0))
+            revert SimswapFactory_POOL_EXISTS(token0, token1);
+
         pool = deploy(address(this), token0, token1);
         _pools[token0][token1] = pool;
         // populate mapping in the reverse direction, deliberate choice to avoid the cost of comparing addresses
         _pools[token1][token0] = pool;
         _allPools.push(pool);
+
         emit PoolCreated(token0, token1, pool, _allPools.length);
     }
 
-    function setFeeTo(address _feeTo) external override {
-        require(msg.sender == feeToSetter, 'Simswap: FORBIDDEN');
+    function setFeeTo(address _feeTo) public override {
+        address msg_sender = msg.sender;
+        if (msg_sender != feeToSetter)
+            revert SimswapFactory_FORBIDDEN(msg_sender, feeToSetter);
+
         feeTo = _feeTo;
     }
 
-    function setFeeToSetter(address _feeToSetter) external override {
-        require(msg.sender == feeToSetter, 'Simswap: FORBIDDEN');
+    function setFeeToSetter(address _feeToSetter) public override {
+        address msg_sender = msg.sender;
+        if (msg_sender != feeToSetter)
+            revert SimswapFactory_FORBIDDEN(msg_sender, feeToSetter);
+
         feeToSetter = _feeToSetter;
     }
 }

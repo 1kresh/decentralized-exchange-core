@@ -5,6 +5,7 @@ import './pool/ISimswapPoolActions.sol';
 import './pool/ISimswapPoolImmutables.sol';
 import './pool/ISimswapPoolEvents.sol';
 import './pool/ISimswapPoolState.sol';
+import './pool/ISimswapPoolErrors.sol';
 
 /// @title The interface for a Simswap Pool
 /// @notice A Simswap pool facilitates swapping and automated market making between any two assets that strictly conform
@@ -14,7 +15,8 @@ interface ISimswapPool is
     ISimswapPoolImmutables,
     ISimswapPoolState,
     ISimswapPoolActions,
-    ISimswapPoolEvents
+    ISimswapPoolEvents,
+    ISimswapPoolErrors
 {
 
 }
