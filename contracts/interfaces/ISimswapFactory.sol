@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.15;
 
-import './factory/ISimswapFactoryErrors.sol';
+import { ISimswapFactoryErrors } from './factory/ISimswapFactoryErrors.sol';
 
 interface ISimswapFactory is ISimswapFactoryErrors {
     event PoolCreated(address indexed token0, address indexed token1, address pool, uint256 poolsAmount);

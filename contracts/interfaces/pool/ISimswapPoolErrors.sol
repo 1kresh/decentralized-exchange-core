@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.15;
 
 /// @title Errors reverted by a pool
 /// @notice Contains all errors reverted by the pool

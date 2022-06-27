@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.15;
 
-import './interfaces/ISimswapFactory.sol';
+import { ISimswapFactory } from './interfaces/ISimswapFactory.sol';
 
-import './modifiers/NoDelegateCall.sol';
+import { NoDelegateCall } from './modifiers/NoDelegateCall.sol';
 
-import './SimswapPoolDeployer.sol';
+import { SimswapPoolDeployer } from './SimswapPoolDeployer.sol';
 
 contract SimswapFactory is ISimswapFactory, SimswapPoolDeployer, NoDelegateCall {
     address public override feeTo;

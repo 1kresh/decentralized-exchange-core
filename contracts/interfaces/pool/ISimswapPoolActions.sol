@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.15;
 
 /// @title Permissionless pool actions
 /// @notice Contains pool methods that can be called by anyone

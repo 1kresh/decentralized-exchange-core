@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.15;
 
-import './interfaces/ISimswapERC20.sol';
+import { ISimswapERC20 } from './interfaces/ISimswapERC20.sol';
 
 contract SimswapERC20 is ISimswapERC20 {
     string private constant _name = 'Simswap';

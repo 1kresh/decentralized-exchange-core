@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.15;
 
-import './interfaces/ISimswapPoolDeployer.sol';
+import { ISimswapPoolDeployer } from './interfaces/ISimswapPoolDeployer.sol';
 
-import './SimswapPool.sol';
+import { SimswapPool } from './SimswapPool.sol';
 
 contract SimswapPoolDeployer is ISimswapPoolDeployer {
     struct Parameters {

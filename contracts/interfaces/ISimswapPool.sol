@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.15;
 
-import './pool/ISimswapPoolActions.sol';
-import './pool/ISimswapPoolImmutables.sol';
-import './pool/ISimswapPoolEvents.sol';
-import './pool/ISimswapPoolState.sol';
-import './pool/ISimswapPoolErrors.sol';
+import { ISimswapPoolActions } from './pool/ISimswapPoolActions.sol';
+import { ISimswapPoolImmutables } from './pool/ISimswapPoolImmutables.sol';
+import { ISimswapPoolEvents } from './pool/ISimswapPoolEvents.sol';
+import { ISimswapPoolState } from './pool/ISimswapPoolState.sol';
+import { ISimswapPoolErrors } from './pool/ISimswapPoolErrors.sol';
 
 /// @title The interface for a Simswap Pool
 /// @notice A Simswap pool facilitates swapping and automated market making between any two assets that strictly conform

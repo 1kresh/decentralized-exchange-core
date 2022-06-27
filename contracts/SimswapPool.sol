@@ -1,26 +1,26 @@
 // SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.15;
 
-import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
-import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import { ReentrancyGuard } from '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import { IERC20 } from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
-import './interfaces/ISimswapCallee.sol';
-import './interfaces/ISimswapFactory.sol';
-
-import './libraries/FixedPoint112.sol';
 import './interfaces/ISimswapPool.sol';
-import './interfaces/ISimswapPoolDeployer.sol';
-import './libraries/Math.sol';
+import { ISimswapCallee } from './interfaces/ISimswapCallee.sol';
+import { ISimswapFactory } from './interfaces/ISimswapFactory.sol';
+import { ISimswapPoolDeployer } from './interfaces/ISimswapPoolDeployer.sol';
 
-import './modifiers/NoDelegateCall.sol';
+import { FixedPoint112 } from './libraries/FixedPoint112.sol';
+import { Math } from './libraries/Math.sol';
 
-import './SimswapERC20.sol';
+import { NoDelegateCall } from './modifiers/NoDelegateCall.sol';
+
+import { SimswapERC20 } from './SimswapERC20.sol';
 
 contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGuard {
     using FixedPoint112 for uint224;
 
     uint256 private constant MINIMUM_LIQUIDITY = 1000;
-    bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
+    bytes4 public constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
 
     /// @inheritdoc ISimswapPoolImmutables
     address public immutable override factory;
