@@ -25,8 +25,14 @@ contract SimswapPoolDeployer is ISimswapPoolDeployer {
         address token0,
         address token1
     ) internal returns (address pool) {
-        parameters = Parameters({factory: factory, token0: token0, token1: token1});
-        pool = address(new SimswapPool{salt: keccak256(abi.encode(token0, token1))}());
+        parameters = Parameters({
+            factory: factory,
+            token0: token0,
+            token1: token1
+        });
+        pool = address(
+            new SimswapPool{ salt: keccak256(abi.encode(token0, token1)) }()
+        );
         delete parameters;
     }
 }

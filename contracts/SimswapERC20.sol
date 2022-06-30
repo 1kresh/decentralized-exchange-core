@@ -14,10 +14,12 @@ contract SimswapERC20 is ISimswapERC20 {
     uint256 private immutable INITIAL_CHAIN_ID;
     bytes32 private immutable INITIAL_DOMAIN_SEPARATOR;
 
-    // keccak256("Permit(address owner,address spender,uint256 amount,uint256 nonce,uint256 deadline)");    
-    bytes32 private constant PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
+    // keccak256("Permit(address owner,address spender,uint256 amount,uint256 nonce,uint256 deadline)");
+    bytes32 private constant PERMIT_TYPEHASH =
+        0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
     // keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
-    bytes32 private constant DOMAIN_TYPEHASH = 0x8b73c3c69bb8fe3d512ecc4cf759cc79239f7b179b0ffacaa9a75d522b39400f;
+    bytes32 private constant DOMAIN_TYPEHASH =
+        0x8b73c3c69bb8fe3d512ecc4cf759cc79239f7b179b0ffacaa9a75d522b39400f;
 
     mapping(address => uint256) private _nonces;
 
@@ -46,11 +48,16 @@ contract SimswapERC20 is ISimswapERC20 {
         return _balances[account];
     }
 
-    function allowance(address owner, address spender) public view override returns (uint256) { 
+    function allowance(address owner, address spender)
+        public
+        view
+        override
+        returns (uint256)
+    {
         return _allowances[owner][spender];
     }
 
-    function nonces(address owner) public view override returns (uint256) { 
+    function nonces(address owner) public view override returns (uint256) {
         return _nonces[owner];
     }
 
@@ -71,9 +78,17 @@ contract SimswapERC20 is ISimswapERC20 {
         emit Transfer(account, address(0), amount);
     }
 
-    function _approve(address owner, address spender, uint256 amount) internal {
+    function _approve(
+        address owner,
+        address spender,
+        uint256 amount
+    ) internal {
         if (owner == address(0))
-            revert SimswapERC20_APPROVE_FROM_ZERO_ADDRESS(owner, spender, amount);
+            revert SimswapERC20_APPROVE_FROM_ZERO_ADDRESS(
+                owner,
+                spender,
+                amount
+            );
         if (spender == address(0))
             revert SimswapERC20_APPROVE_TO_ZERO_ADDRESS(owner, spender, amount);
 
@@ -82,7 +97,11 @@ contract SimswapERC20 is ISimswapERC20 {
         emit Approval(owner, spender, amount);
     }
 
-    function _transfer(address from, address to, uint256 amount) internal {
+    function _transfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal {
         if (from == address(0))
             revert SimswapERC20_TRANSFER_FROM_ZERO_ADDRESS(from, to, amount);
         if (to == address(0))
@@ -94,12 +113,20 @@ contract SimswapERC20 is ISimswapERC20 {
         emit Transfer(from, to, amount);
     }
 
-    function approve(address spender, uint256 amount) public override returns (bool) {
+    function approve(address spender, uint256 amount)
+        public
+        override
+        returns (bool)
+    {
         _approve(msg.sender, spender, amount);
         return true;
     }
 
-    function transfer(address account, uint256 amount) public override returns (bool) {
+    function transfer(address account, uint256 amount)
+        public
+        override
+        returns (bool)
+    {
         _transfer(msg.sender, account, amount);
         return true;
     }
@@ -115,24 +142,36 @@ contract SimswapERC20 is ISimswapERC20 {
         }
     }
 
-    function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) public override returns (bool) {
         _spendAllowance(from, to, amount);
         _transfer(from, to, amount);
         return true;
     }
 
-    function permit(address owner, address spender, uint256 amount, uint256 deadline, uint8 v, bytes32 r, bytes32 s) public override {
+    function permit(
+        address owner,
+        address spender,
+        uint256 amount,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) public override {
         {
             uint256 blockTimestamp = block.timestamp;
             if (deadline < blockTimestamp)
                 revert SimswapERC20_EXPIRED(deadline, blockTimestamp);
-        }        
+        }
 
         unchecked {
             address recoveredAddress = ecrecover(
                 keccak256(
                     abi.encodePacked(
-                        "\x19\x01",
+                        '\x19\x01',
                         DOMAIN_SEPARATOR(),
                         keccak256(
                             abi.encode(
@@ -156,7 +195,10 @@ contract SimswapERC20 is ISimswapERC20 {
     }
 
     function DOMAIN_SEPARATOR() public view virtual returns (bytes32) {
-        return block.chainid == INITIAL_CHAIN_ID ? INITIAL_DOMAIN_SEPARATOR : computeDomainSeparator();
+        return
+            block.chainid == INITIAL_CHAIN_ID
+                ? INITIAL_DOMAIN_SEPARATOR
+                : computeDomainSeparator();
     }
 
     function computeDomainSeparator() internal view virtual returns (bytes32) {
@@ -165,7 +207,7 @@ contract SimswapERC20 is ISimswapERC20 {
                 abi.encode(
                     DOMAIN_TYPEHASH,
                     keccak256(bytes(_name)),
-                    keccak256("1"),
+                    keccak256('1'),
                     block.chainid,
                     address(this)
                 )

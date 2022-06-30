@@ -1,0 +1,15 @@
+{
+  "abi": [],
+  "evm": {
+    "bytecode": {
+      "object": "60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220b2a7ba6fb625fb3dea0989d31187715e53779eb036b89df3aa88faad47031e0f64736f6c634300080f0033",
+      "sourceMap": "138:2622:19:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;138:2622:19;;;;;;;;;;;;;;;;;"
+    },
+    "deployedBytecode": {
+      "object": "73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220b2a7ba6fb625fb3dea0989d31187715e53779eb036b89df3aa88faad47031e0f64736f6c634300080f0033",
+      "sourceMap": "138:2622:19:-:0;;;;;;;;"
+    }
+  },
+  "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"details\":\"Standard math utilities missing in the Solidity language.\",\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/libraries/Math.sol\":\"Math\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":800},\"remappings\":[]},\"sources\":{\"contracts/libraries/Math.sol\":{\"keccak256\":\"0x4c61bfd608b9255bbfbcfcb20b289077ef5bdde8b5f35883c69b4282e2fd9c34\",\"license\":\"Unlicensed\",\"urls\":[\"bzz-raw://65467d9edbdf6ccce4c1496d3f0384d2dbef88f1761e526a3936113afcde5f38\",\"dweb:/ipfs/QmY12spsrYNS15iHp5vK2bDHsh4Kwr6FSytnixr3NBGHdw\"]}},\"version\":1}",
+  "bytecode": "60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220b2a7ba6fb625fb3dea0989d31187715e53779eb036b89df3aa88faad47031e0f64736f6c634300080f0033"
+}

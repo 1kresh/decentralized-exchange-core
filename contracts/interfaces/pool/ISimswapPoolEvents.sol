@@ -8,11 +8,7 @@ interface ISimswapPoolEvents {
     /// @param sender The address that minted the liquidity
     /// @param amount0 How much token0 was required for the minted liquidity
     /// @param amount1 How much token1 was required for the minted liquidity
-    event Mint(
-        address indexed sender,
-        uint256 amount0,
-        uint256 amount1
-    );
+    event Mint(address indexed sender, uint256 amount0, uint256 amount1);
 
     /// @notice Emitted when a position's liquidity is removed
     /// @dev Does not withdraw any fees earned by the liquidity position, which must be withdrawn via #collect
@@ -45,8 +41,5 @@ interface ISimswapPoolEvents {
     /// @notice Emitted by the pool for update reserves
     /// @param reserve0 Amount of token0
     /// @param reserve1 Amount of token1
-    event Sync(
-        uint112 reserve0,
-        uint112 reserve1
-    );
+    event Sync(uint112 reserve0, uint112 reserve1);
 }

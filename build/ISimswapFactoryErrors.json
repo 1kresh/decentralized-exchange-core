@@ -1,0 +1,64 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "msg_sender",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "feeToSetter",
+          "type": "address"
+        }
+      ],
+      "name": "SimswapFactory_FORBIDDEN",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token0",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "token1",
+          "type": "address"
+        }
+      ],
+      "name": "SimswapFactory_POOL_EXISTS",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "token",
+          "type": "address"
+        }
+      ],
+      "name": "SimswapFactory_SAME_TOKENS",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "SimswapFactory_ZERO_ADDRESS",
+      "type": "error"
+    }
+  ],
+  "evm": {
+    "bytecode": {
+      "object": "",
+      "sourceMap": ""
+    },
+    "deployedBytecode": {
+      "object": "",
+      "sourceMap": ""
+    }
+  },
+  "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"msg_sender\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"feeToSetter\",\"type\":\"address\"}],\"name\":\"SimswapFactory_FORBIDDEN\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token0\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token1\",\"type\":\"address\"}],\"name\":\"SimswapFactory_POOL_EXISTS\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"SimswapFactory_SAME_TOKENS\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SimswapFactory_ZERO_ADDRESS\",\"type\":\"error\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"title\":\"Errors reverted by a factory\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Contains all errors reverted by the factory\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/factory/ISimswapFactoryErrors.sol\":\"ISimswapFactoryErrors\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":800},\"remappings\":[]},\"sources\":{\"contracts/interfaces/factory/ISimswapFactoryErrors.sol\":{\"keccak256\":\"0x5bc44723888a63e46aaa372c559c9bf1d06d94094db86ddae9e3df38b09d5823\",\"license\":\"Unlicensed\",\"urls\":[\"bzz-raw://d68e1d58358cdcbab3093a0144cfaa23f0925c94b581ec8516f937ccb3b6dd6f\",\"dweb:/ipfs/QmZwyoiUXvFD6zA64NUbW73d1gG4aQA4YxCBqdA86XTTSu\"]}},\"version\":1}",
+  "bytecode": ""
+}

@@ -1,0 +1,134 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount0",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount1",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "Burn",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount0",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount1",
+          "type": "uint256"
+        }
+      ],
+      "name": "Mint",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount0In",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount1In",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount0Out",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount1Out",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "Swap",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint112",
+          "name": "reserve0",
+          "type": "uint112"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint112",
+          "name": "reserve1",
+          "type": "uint112"
+        }
+      ],
+      "name": "Sync",
+      "type": "event"
+    }
+  ],
+  "evm": {
+    "bytecode": {
+      "object": "",
+      "sourceMap": ""
+    },
+    "deployedBytecode": {
+      "object": "",
+      "sourceMap": ""
+    }
+  },
+  "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount0\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount1\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"Burn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount0\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount1\",\"type\":\"uint256\"}],\"name\":\"Mint\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount0In\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount1In\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount0Out\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount1Out\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"Swap\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint112\",\"name\":\"reserve0\",\"type\":\"uint112\"},{\"indexed\":false,\"internalType\":\"uint112\",\"name\":\"reserve1\",\"type\":\"uint112\"}],\"name\":\"Sync\",\"type\":\"event\"}],\"devdoc\":{\"events\":{\"Burn(address,uint256,uint256,address)\":{\"details\":\"Does not withdraw any fees earned by the liquidity position, which must be withdrawn via #collect\",\"params\":{\"amount0\":\"The amount of token0 withdrawn\",\"amount1\":\"The amount of token1 withdrawn\",\"sender\":\"The address that recieved tokens\"}},\"Mint(address,uint256,uint256)\":{\"params\":{\"amount0\":\"How much token0 was required for the minted liquidity\",\"amount1\":\"How much token1 was required for the minted liquidity\",\"sender\":\"The address that minted the liquidity\"}},\"Swap(address,uint256,uint256,uint256,uint256,address)\":{\"params\":{\"amount0In\":\"Amount of token0 for input\",\"amount0Out\":\"Amount of token0 for output\",\"amount1In\":\"Amount of token1 for input\",\"amount1Out\":\"Amount of token1 for output\",\"sender\":\"The address that initiated the swap call, and that received the callback\"}},\"Sync(uint112,uint112)\":{\"params\":{\"reserve0\":\"Amount of token0\",\"reserve1\":\"Amount of token1\"}}},\"kind\":\"dev\",\"methods\":{},\"title\":\"Events emitted by a pool\",\"version\":1},\"userdoc\":{\"events\":{\"Burn(address,uint256,uint256,address)\":{\"notice\":\"Emitted when a position's liquidity is removed\"},\"Mint(address,uint256,uint256)\":{\"notice\":\"Emitted when liquidity is minted for a given position\"},\"Swap(address,uint256,uint256,uint256,uint256,address)\":{\"notice\":\"Emitted by the pool for any swaps between token0 and token1\"},\"Sync(uint112,uint112)\":{\"notice\":\"Emitted by the pool for update reserves\"}},\"kind\":\"user\",\"methods\":{},\"notice\":\"Contains all events emitted by the pool\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/pool/ISimswapPoolEvents.sol\":\"ISimswapPoolEvents\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":800},\"remappings\":[]},\"sources\":{\"contracts/interfaces/pool/ISimswapPoolEvents.sol\":{\"keccak256\":\"0xbdc051b40e892cb50883db76962d7febebc24241919eb35dffcf06b7e850b715\",\"license\":\"Unlicensed\",\"urls\":[\"bzz-raw://cd09e4644601b2204fc3685aa3528e9603d9d483c8b205e615402be18908080d\",\"dweb:/ipfs/QmWVoaoHyhUa9S4pjBK87HVEaSfGVA4na7AmHNuRBdzaVF\"]}},\"version\":1}",
+  "bytecode": ""
+}

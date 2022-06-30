@@ -1,0 +1,107 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "burn",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount0",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount1",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "mint",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "liquidity",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "skim",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount0Out",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount1Out",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "swap",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "sync",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "evm": {
+    "bytecode": {
+      "object": "",
+      "sourceMap": ""
+    },
+    "deployedBytecode": {
+      "object": "",
+      "sourceMap": ""
+    }
+  },
+  "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"burn\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amount0\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount1\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"mint\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"liquidity\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"}],\"name\":\"skim\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount0Out\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount1Out\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"swap\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sync\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"burn(address)\":{\"details\":\"Burn liquidity\",\"params\":{\"recipient\":\"The address that recieved tokens\"},\"returns\":{\"amount0\":\"The amount of token0 sent to the recipient\",\"amount1\":\"The amount of token1 sent to the recipient\"}},\"mint(address)\":{\"details\":\"Mint liquidity\",\"params\":{\"recipient\":\"The address for which the liquidity will be created\"},\"returns\":{\"liquidity\":\"The amount of liquidity tokens was minted\"}},\"swap(uint256,uint256,address,bytes)\":{\"details\":\"Swap tokens\",\"params\":{\"amount0Out\":\"The amount of token0 output\",\"amount1Out\":\"The amount of token1 output\",\"data\":\"Any data to be passed through to the callback\",\"recipient\":\"The address to receive the output of the swap\"}}},\"title\":\"Permissionless pool actions\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"burn(address)\":{\"notice\":\"Burn liquidity from the sender and account tokens owed for the liquidity to the position\"},\"mint(address)\":{\"notice\":\"Adds liquidity for the given recipient\"},\"swap(uint256,uint256,address,bytes)\":{\"notice\":\"Swap token0 for token1, or token1 for token0\"}},\"notice\":\"Contains pool methods that can be called by anyone\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/pool/ISimswapPoolActions.sol\":\"ISimswapPoolActions\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":800},\"remappings\":[]},\"sources\":{\"contracts/interfaces/pool/ISimswapPoolActions.sol\":{\"keccak256\":\"0x08ce5bcaf3d614bea289df3003ee6be136f5bdbd142f8c63b5982af43aceaa85\",\"license\":\"Unlicensed\",\"urls\":[\"bzz-raw://95c48d162eea4fe36f2cd60bef7959bc6563ddf75c2bf75b1ef1d6dda4d8c5e4\",\"dweb:/ipfs/QmXQsUym4HAv6eaoAvzfz9tNAiSQnyDvAZnoMYxm8PNoAb\"]}},\"version\":1}",
+  "bytecode": ""
+}

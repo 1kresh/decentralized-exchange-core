@@ -7,7 +7,11 @@ import { NoDelegateCall } from './modifiers/NoDelegateCall.sol';
 
 import { SimswapPoolDeployer } from './SimswapPoolDeployer.sol';
 
-contract SimswapFactory is ISimswapFactory, SimswapPoolDeployer, NoDelegateCall {
+contract SimswapFactory is
+    ISimswapFactory,
+    SimswapPoolDeployer,
+    NoDelegateCall
+{
     address public override feeTo;
     address public override feeToSetter;
 
@@ -19,26 +23,36 @@ contract SimswapFactory is ISimswapFactory, SimswapPoolDeployer, NoDelegateCall 
         feeTo = _feeTo;
     }
 
-    function getPool(address tokenA, address tokenB) public override view returns (address) {
+    function getPool(address tokenA, address tokenB)
+        public
+        view
+        override
+        returns (address)
+    {
         return _pools[tokenA][tokenB];
     }
 
-    function allPools() public override view returns (address[] memory) {
+    function allPools() public view override returns (address[] memory) {
         return _allPools;
     }
 
-    function allPoolsLength() public override view returns (uint256) {
+    function allPoolsLength() public view override returns (uint256) {
         return _allPools.length;
     }
 
-    function createPool(address tokenA, address tokenB) public override noDelegateCall returns (address pool) {
-        if (tokenA == tokenB)
-            revert SimswapFactory_SAME_TOKENS(tokenA);
+    function createPool(address tokenA, address tokenB)
+        public
+        override
+        noDelegateCall
+        returns (address pool)
+    {
+        if (tokenA == tokenB) revert SimswapFactory_SAME_TOKENS(tokenA);
 
-        (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
+        (address token0, address token1) = tokenA < tokenB
+            ? (tokenA, tokenB)
+            : (tokenB, tokenA);
 
-        if (token0 == address(0))
-            revert SimswapFactory_ZERO_ADDRESS();
+        if (token0 == address(0)) revert SimswapFactory_ZERO_ADDRESS();
         if (_pools[token0][token1] != address(0))
             revert SimswapFactory_POOL_EXISTS(token0, token1);
 

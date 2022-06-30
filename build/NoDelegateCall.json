@@ -1,0 +1,15 @@
+{
+  "abi": [],
+  "evm": {
+    "bytecode": {
+      "object": "",
+      "sourceMap": ""
+    },
+    "deployedBytecode": {
+      "object": "",
+      "sourceMap": ""
+    }
+  },
+  "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"stateVariables\":{\"original\":{\"details\":\"The original address of this contract\"}},\"title\":\"Prevents delegatecall to a contract\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Base contract that provides a modifier for preventing delegatecall to methods in a child contract\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/modifiers/NoDelegateCall.sol\":\"NoDelegateCall\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":800},\"remappings\":[]},\"sources\":{\"contracts/modifiers/NoDelegateCall.sol\":{\"keccak256\":\"0x3c48723395c7f4c710921c65835de76ab560833d421b3f7adc8a7dccd204b52c\",\"license\":\"Unlicensed\",\"urls\":[\"bzz-raw://6e29f8ee9bd9cb03fd3ed1e0819c4a4ae23cc527bca6bc8ca760ca53ae349cea\",\"dweb:/ipfs/QmSXSAPEfooE6oyVenUfY18aioLa545vPfz2tyB2ZZk37U\"]}},\"version\":1}",
+  "bytecode": ""
+}
