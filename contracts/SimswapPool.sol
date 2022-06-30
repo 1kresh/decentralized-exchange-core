@@ -56,8 +56,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     function balance0() private view returns (uint256) {
         (bool success, bytes memory data) =
             token0.staticcall(abi.encodeWithSelector(IERC20.balanceOf.selector, address(this)));
-        if (success == false || data.length <= 31)
-            revert();
+        requre(success == true && data.length >= 32);
         return abi.decode(data, (uint256));
     }
 
@@ -67,8 +66,7 @@ contract SimswapPool is ISimswapPool, SimswapERC20, NoDelegateCall, ReentrancyGu
     function balance1() private view returns (uint256) {
         (bool success, bytes memory data) =
             token1.staticcall(abi.encodeWithSelector(IERC20.balanceOf.selector, address(this)));
-        if (success == false || data.length <= 31)
-            revert();
+        requre(success == true && data.length >= 32);
         return abi.decode(data, (uint256));
     }
 
