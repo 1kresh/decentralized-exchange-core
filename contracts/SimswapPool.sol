@@ -105,9 +105,9 @@ contract SimswapPool is
         uint112 _reserve0,
         uint112 _reserve1
     ) private {
-        uint256 max112up;
+        uint256 max112up = type(uint112).max;
         unchecked {
-            max112up = type(uint112).max + 1;
+            max112up += 1;
         }
         if (_balance0 >= max112up || _balance1 >= max112up)
             revert SimswapPool_OVERFLOW(_balance0, _balance1);
